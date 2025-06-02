@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animate.css">
+</head>
+
+<body>
+  <div class="background"></div>
+
+  <div class="bookmarks">
+    <div class="hint top left">
+      <span>Esc</span>&nbsp;&nbsp;&nbsp;<span>Close</span>
+    </div>
+
+    <div class="bookmarks-background fade-animation"></div>
+    <div class="bookmarks-wrap fade-animation"></div>
+  </div>
+
+  <div class="container center fade-animation">
+    <h1 class="time"></h1>
+    <h2 class="date"></h2>
+    <div class="search">
+      <input type="text" class="search__input" name="query" placeholder="Google" autofocus>
+    </div>
+    <div class="break"></div>
+    <div class="quick-links flex"></div>
+  </div>
+
+  <div class="hint right fade-animation">
+    <span>Ctrl + c</span>&nbsp;&nbsp;&nbsp;<span>New image</span>
+  </div>
+
+  <div class="hint bottom fade-animation">
+    <span>Ctrl + b</span>&nbsp;&nbsp;&nbsp;<span>Bookmarks</span>
+  </div>
+
+  <div class="weather fade-animation">
+    <div class="weather__heading">
+      <h3 class="weather__temperature"></h3><span class="weather__unit"></span>
+      <i class="weather__condition"></i>
+    </div>
+    <div class="weather__subheading">
+      <h4 class="weather__condition-text"></h4>&nbsp;&centerdot;&nbsp;
+      <h4 class="weather__location"></h4>
+    </div>
+  </div>
+
+  <a href="options.html" class="bottom left fade-animation">Options</a>
+
+  <div class="credit fade-animation"></div>
+
+  <script src="js/sanitizer.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/images.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/bookmarks.js"></script>
+  <script src="js/site-info.js"></script>
+  <script src="js/quick-links.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
