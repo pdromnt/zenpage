@@ -16,7 +16,7 @@
     "unlimitedStorage"
   ],
   "host_permissions": [
-    "https://api.unsplash.com/*",
+    "https://*.unsplash.com/*",
     "https://api.openweathermap.org/*",
     "https://openweathermap.org/*",
     "https://api.positionstack.com/*"
