@@ -1,5 +1,5 @@
 # ZenPage+
-Chrome (or any Chromium based browser and Firefox) extension that replaces the New Tab page with a personalised homepage, featuring beautiful photography, bookmark management and weather information.
+Extension built for any Chrome-ium based browser (and maybe Firefox), that replaces the New Tab page with a personalised homepage, featuring beautiful photography, bookmark management and weather information.
 
 Forked from the original [ZenPage](https://github.com/jack-doyle/zenpage) to fix most issues and refactor the old broken code.
 
@@ -8,6 +8,8 @@ Forked from the original [ZenPage](https://github.com/jack-doyle/zenpage) to fix
 * Quick links to popular sites
 * Categorizable bookmarks
 * Weather widget displaying information from [OpenWeatherMap](https://openweathermap.org/)
+* Manifest V3 support
+* Massively improved performance and code over the original
 
 ## Installing
 1. First click in Code > Download Zip > Extract zip  
@@ -28,7 +30,7 @@ Same process as installing. Your API keys and settings are saved in the browser 
 ![Bookmarks](/screenshots/bmarks.png?raw=true)
 
 ## License
-Same as the old ZenPage. Which is, who knows. My changes are under the ISC license.
+Same as the old ZenPage for old code. Which is, who knows. New code/changes are under the UNLICENSE license.
 
 ## Contributing
-Just open a PR, if I agree with your changes I'll merge.
+Nope.

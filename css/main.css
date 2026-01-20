@@ -461,3 +461,12 @@ a:focus {
   font-size: 0.8rem;
   border-radius: 5px;
 }
+
+/* Utility helper classes to avoid inline styles for CSP */
+.blurred {
+  filter: blur(2px);
+}
+
+.show {
+  display: block;
+}

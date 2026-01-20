@@ -42,16 +42,16 @@
   checkApiKeys();
 
   function checkApiKeys() {
-    chrome.storage.sync.get({ apiKeys: {} }, function(result) {
+    chrome.storage.sync.get({ apiKeys: {} }, function (result) {
       let keys = result.apiKeys;
       if (!keys.unsplash || !keys.unsplashSecret || !keys.positionStack || !keys.openWeather) {
-        document.querySelector('.missing-keys-hint').style.display = 'block';
+        document.querySelector('.missing-keys-hint').classList.add('show');
       }
     });
   }
 
   function handleImageReload() {
-    chrome.storage.sync.get({ imageReloads: [] }, function(result) {
+    chrome.storage.sync.get({ imageReloads: [] }, function (result) {
       let reloads = result.imageReloads;
       let now = Date.now();
       // Filter reloads from the last 5 minutes (300000 ms)
@@ -73,21 +73,21 @@
         chrome.storage.sync.set({ imageReloads: reloads });
 
         document.querySelector('.hint.right').classList.add('animated', 'jello');
-        loadImage();
+        loadImage(true);
       }
     });
   }
 
   function openBookmarks() {
     bookmarks.classList.add('open');
-    document.querySelector('.container').style.filter = 'blur(2px)';
-    document.querySelector('.background').style.filter = 'blur(2px)';
+    document.querySelector('.container').classList.add('blurred');
+    document.querySelector('.background').classList.add('blurred');
   }
 
   function closeBookmarks() {
     bookmarks.classList.remove('open');
-    document.querySelector('.container').style.filter = 'none';
-    document.querySelector('.background').style.filter = 'brightness(50%) contrast(80%)';
+    document.querySelector('.container').classList.remove('blurred');
+    document.querySelector('.background').classList.remove('blurred');
   }
 
   function resetAnimation() {

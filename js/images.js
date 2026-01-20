@@ -8,31 +8,39 @@ let PATH_RANDOM = '/random';
 let PATH_UTM = '?utm_source=startpage&utm_medium=referral&utm_campaign=api-credit';
 let PARAM_FEATURED = 'featured=true';
 let PARAM_ORIENTATION = 'orientation=landscape';
-let PARAM_COUNT = 'count=20';
+let PARAM_COUNT = 'count=1';
 let url = PATH_BASE + PATH_RANDOM + '?' + PARAM_FEATURED + '&' + PARAM_ORIENTATION + '&' + PARAM_COUNT;
 
-function loadImage() {
+function loadImage(force = false) {
   chrome.storage.sync.get({
     apiKeys: {}
   }, function (options) {
     if (options.apiKeys.unsplash) {
-      if (images.length === 0) {
-        getImages(url, options.apiKeys.unsplash, function (result) {
-          images = JSON.parse(result).map(function (image) {
-            return {
-              url: image.urls.full,
-              user: image.user
-            };
-          });
+      chrome.storage.local.get(['cachedImage', 'imageTimestamp'], function (cache) {
+        let now = Date.now();
+        // 1 hour cache = 3600000 ms
+        if (!force && cache.cachedImage && cache.imageTimestamp && (now - cache.imageTimestamp < 3600000)) {
+          setImage(cache.cachedImage);
+        } else {
+          getImages(url, options.apiKeys.unsplash, function (result) {
+            let fetchedImages = JSON.parse(result).map(function (image) {
+              return {
+                url: image.urls.full,
+                user: image.user
+              };
+            });
 
-          if (images.length > 0) {
-            setImage(images[0]);
-          }
-        });
-      } else {
-        let current = images.pop();
-        setImage(current);
-      }
+            if (fetchedImages.length > 0) {
+              let image = fetchedImages[0];
+              setImage(image);
+              chrome.storage.local.set({
+                cachedImage: image,
+                imageTimestamp: now
+              });
+            }
+          });
+        }
+      });
     }
   });
 }

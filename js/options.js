@@ -1,4 +1,33 @@
-let sitesOptions = document.querySelectorAll('.site');
+let quickLinksContainer = document.querySelector('.quick-links-container');
+let sitesOptions = []; // Will be populated dynamically
+
+// Fetch sites data
+fetch('data/sites.json')
+  .then(response => response.json())
+  .then(sites => {
+    sites.forEach(site => {
+      let siteDiv = document.createElement('div');
+      siteDiv.className = 'site';
+
+      let label = document.createElement('label');
+      label.htmlFor = site.id;
+      label.textContent = site.name;
+
+      let input = document.createElement('input');
+      input.id = site.id;
+      input.type = 'checkbox';
+
+      siteDiv.appendChild(label);
+      siteDiv.appendChild(input);
+      quickLinksContainer.appendChild(siteDiv);
+    });
+
+    // Update the sitesOptions list after rendering
+    sitesOptions = document.querySelectorAll('.site');
+
+    // Call restore after rendering
+    restoreQuickLinks();
+  });
 let weatherLocationOption = document.querySelector('#weather-location');
 let weatherCelsiusOption = document.querySelector('#celsius');
 let weatherFahrenheitOption = document.querySelector('#fahrenheit');
@@ -155,7 +184,7 @@ function notifySave() {
   status.textContent = 'Saved.';
   setTimeout(function () {
     status.textContent = '';
-  }, 750);
+  }, 2000);
 }
 
 function createCategoryElement(name = '', links = []) {
@@ -174,7 +203,7 @@ function createCategoryElement(name = '', links = []) {
   let removeBtn = document.createElement('button');
   removeBtn.textContent = 'Remove Category';
   removeBtn.className = 'remove-btn';
-  removeBtn.onclick = function() {
+  removeBtn.onclick = function () {
     li.remove();
     checkLimits();
   };
@@ -207,7 +236,7 @@ function createCategoryElement(name = '', links = []) {
   let addLinkBtn = document.createElement('button');
   addLinkBtn.textContent = 'Add Link';
   addLinkBtn.className = 'add-link-btn';
-  addLinkBtn.onclick = function() {
+  addLinkBtn.onclick = function () {
     if (linksUl.children.length < MAX_LINKS) {
       linksUl.appendChild(createLinkElement());
     } else {
@@ -239,7 +268,7 @@ function createLinkElement(title = '', url = '') {
   let removeBtn = document.createElement('button');
   removeBtn.textContent = 'X';
   removeBtn.className = 'remove-link-btn';
-  removeBtn.onclick = function() {
+  removeBtn.onclick = function () {
     li.remove();
   };
 
@@ -275,7 +304,7 @@ function restoreBookmarks() {
   });
 }
 
-addCategoryBtn.addEventListener('click', function() {
+addCategoryBtn.addEventListener('click', function () {
   if (bookmarksList.children.length < MAX_CATEGORIES) {
     bookmarksList.appendChild(createCategoryElement());
     checkLimits();
@@ -301,10 +330,11 @@ function restoreWeatherOptions() {
       weatherDisplayOption.checked = true;
     }
 
-    if (options.weather.units === 'metric') {
-      weatherCelsiusOption.checked = true;
-    } else if (options.weather.units === 'imperial') {
+    if (options.weather.units === 'imperial') {
       weatherFahrenheitOption.checked = true;
+    } else {
+      // Default to metric (Celsius)
+      weatherCelsiusOption.checked = true;
     }
 
     if (options.weather.location) {
@@ -347,14 +377,14 @@ function getCurrentLocation() {
         // Prefer the value from the input if present, otherwise try storage
         let key = positionStackKeyOption.value.trim();
         if (key) {
-           getFormattedLocation(position, key, setLocation);
+          getFormattedLocation(position, key, setLocation);
         } else {
-          chrome.storage.sync.get({ apiKeys: {} }, function(result) {
+          chrome.storage.sync.get({ apiKeys: {} }, function (result) {
             if (result.apiKeys.positionStack) {
-               getFormattedLocation(position, result.apiKeys.positionStack, setLocation);
+              getFormattedLocation(position, result.apiKeys.positionStack, setLocation);
             } else {
-               alert("Please enter a PositionStack API Key.");
-               locationFetchStatus.textContent = '';
+              alert("Please enter a PositionStack API Key.");
+              locationFetchStatus.textContent = '';
             }
           });
         }
@@ -414,7 +444,7 @@ document.getElementById('save').addEventListener('click', saveOptions);
 
 // Handle active state in sidebar
 document.querySelectorAll('.sidebar nav a').forEach(link => {
-  link.addEventListener('click', function() {
+  link.addEventListener('click', function () {
     document.querySelectorAll('.sidebar nav a').forEach(l => l.classList.remove('active'));
     this.classList.add('active');
   });
