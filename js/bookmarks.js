@@ -1,6 +1,8 @@
 let bookmarks = document.querySelector('.bookmarks-wrap');
 
-loadBookmarks();
+// Ensure i18n is initialized if not already
+i18n.init().then(loadBookmarks);
+
 
 function loadBookmarks() {
   chrome.storage.sync.get({
@@ -11,11 +13,12 @@ function loadBookmarks() {
       bookmarksInfo.classList.add('bookmarks-info');
 
       let title = document.createElement('span');
-      title.textContent = 'No bookmarks yet.';
+      title.textContent = i18n.t('bookmarks_no_data');
       title.classList.add('title');
 
       let subtitle = document.createElement('p');
-      subtitle.innerHTML = 'Add bookmarks on the <a href="options.html">options page</a>.';
+      const settingsLink = `<a href="settings.html" data-i18n="settings_title">${i18n.t('settings_title')}</a>`;
+      subtitle.innerHTML = i18n.t('bookmarks_add_prompt').replace('%settings_link%', settingsLink);
       subtitle.classList.add('subtitle');
 
       bookmarksInfo.appendChild(title);
@@ -23,6 +26,8 @@ function loadBookmarks() {
 
       bookmarks.appendChild(bookmarksInfo);
     } else {
+      // Clear before loading
+      bookmarks.innerHTML = '';
       items.bookmarks.forEach(function (bookmark) {
         let newCategory = document.createElement('div');
         newCategory.classList.add('category');

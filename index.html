@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome</title>
+  <title data-i18n="app_title">ZenPage+</title>
 
   <link rel="stylesheet" href="css/lineicons.css">
 
@@ -19,7 +19,7 @@
 
   <div class="bookmarks">
     <div class="hint top left">
-      <span>Esc</span>&nbsp;&nbsp;&nbsp;<span>Close</span>
+      <span data-i18n="hint_esc">Esc</span>&nbsp;&nbsp;&nbsp;<span data-i18n="hint_close">Close</span>
     </div>
 
     <div class="bookmarks-background fade-animation"></div>
@@ -31,21 +31,23 @@
     <h1 class="time"></h1>
     <h2 class="date"></h2>
     <div class="search">
-      <input type="text" class="search__input" name="query" placeholder="Google" autofocus>
+      <input type="text" class="search__input" name="query" placeholder="Google" autofocus
+        data-i18n="search_placeholder">
     </div>
     <div class="missing-keys-hint fade-animation">
-      <span>Check the settings page to input your API keys and get all features working!</span>
+      <span data-i18n="missing_keys_hint">Check the settings page to input your API keys and get all features
+        working!</span>
     </div>
     <div class="break"></div>
     <div class="quick-links flex"></div>
   </div>
 
   <div class="hint right fade-animation">
-    <span>Ctrl + c</span>&nbsp;&nbsp;&nbsp;<span>New image</span>
+    <span data-i18n="hint_ctrl_c">Ctrl + c</span>&nbsp;&nbsp;&nbsp;<span data-i18n="hint_new_image">New image</span>
   </div>
 
   <div class="hint bottom fade-animation">
-    <span>Ctrl + b</span>&nbsp;&nbsp;&nbsp;<span>Bookmarks</span>
+    <span data-i18n="hint_ctrl_b">Ctrl + b</span>&nbsp;&nbsp;&nbsp;<span data-i18n="hint_bookmarks">Bookmarks</span>
   </div>
 
   <div class="weather fade-animation">
@@ -59,16 +61,16 @@
     </div>
   </div>
 
-  <a href="options.html" class="bottom left fade-animation">Options</a>
+  <a href="settings.html" class="bottom left fade-animation" data-i18n="settings_title">Settings</a>
 
   <div class="credit fade-animation"></div>
 
+  <script src="js/moment.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/weather.js"></script>
   <script src="js/search.js"></script>
   <script src="js/images.js"></script>
-  <script src="js/moment.js"></script>
   <script src="js/bookmarks.js"></script>
-
   <script src="js/quick-links.js"></script>
   <script src="js/main.js"></script>
 </body>

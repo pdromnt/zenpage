@@ -2,7 +2,6 @@ let images = [];
 let background = document.querySelector('.background');
 let credit = document.querySelector('.credit');
 
-// Caches 20 random photos
 let PATH_BASE = 'https://api.unsplash.com/photos';
 let PATH_RANDOM = '/random';
 let PATH_UTM = '?utm_source=startpage&utm_medium=referral&utm_campaign=api-credit';
@@ -89,7 +88,7 @@ function setCredit(user) {
 
   let aUser = document.createElement('a');
   aUser.href = user.links.html + PATH_UTM;
-  aUser.textContent = 'Photo by ' + user.name;
+  aUser.textContent = i18n.t('photo_by') + ' ' + user.name;
 
   let separator = document.createTextNode(' / ');
 

@@ -51,6 +51,11 @@
     });
   }
 
+  // Initialize i18n
+  i18n.init().then(() => {
+    tick(); // Run tick after i18n is ready
+  });
+
   function handleImageReload() {
     chrome.storage.sync.get({ imageReloads: [] }, function (result) {
       let reloads = result.imageReloads;
@@ -62,7 +67,7 @@
         // Show wait tooltip
         let hintRight = document.querySelector('.hint.right');
         let originalText = hintRight.innerHTML;
-        hintRight.innerHTML = '<span>Rate limit, please wait (5 mins)...</span>';
+        hintRight.innerHTML = `<span>${i18n.t('rate_limit_msg')}</span>`;
         hintRight.classList.add('animated', 'jello');
 
         setTimeout(() => {
@@ -96,20 +101,25 @@
   }
 
   function tick() {
-    let now = moment();
-    let hour = now.hour();
-    let greeting = "Good morning! ☀️";
+    let now = new Date();
+    let hour = now.getHours();
+    let greeting = i18n.t("greeting_morning");
 
     if (hour >= 12 && hour < 18) {
-      greeting = "Good afternoon! 🌤️";
+      greeting = i18n.t("greeting_afternoon");
     } else if (hour >= 18 && hour < 22) {
-      greeting = "Good evening! 🌙";
+      greeting = i18n.t("greeting_evening");
     } else if (hour >= 22 || hour < 5) {
-      greeting = "Good night! 🦉";
+      greeting = i18n.t("greeting_night");
     }
 
-    let t = now.format("HH:mm:ss");
-    let d = now.format("dddd, MMMM Do YYYY");
+    // Localized Time
+    let timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    let t = new Intl.DateTimeFormat(i18n.currentLanguage, timeOptions).format(now);
+
+    // Localized Date (e.g., "Tuesday, January 20, 2026")
+    let dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let d = new Intl.DateTimeFormat(i18n.currentLanguage, dateOptions).format(now);
 
     timeDisplay.textContent = t;
     dateDisplay.textContent = d;
