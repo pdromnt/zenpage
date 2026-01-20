@@ -33,4 +33,4 @@ Same process as installing. Your API keys and settings are saved in the browser 
 Same as the old ZenPage for old code. Which is, who knows. New code/changes are under the UNLICENSE license.
 
 ## Contributing
-Nope.
+Please fork.
