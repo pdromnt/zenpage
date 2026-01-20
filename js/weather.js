@@ -63,28 +63,62 @@
         cache.lat === latitude &&
         cache.lon === longitude &&
         cache.units === units &&
+        cache.iconDataUri &&
         (now - cache.timestamp < 600000);
 
       if (isValidCache) {
         weather.classList.add('active');
-        updateWeather(cache.data, units, location);
+        updateWeather(cache.data, units, location, cache.iconDataUri);
       } else {
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`)
           .then(response => response.json().then(data => ({ status: response.status, data })))
           .then((response) => {
-            weather.classList.add('active');
-            updateWeather(response.data, units, location);
+            let weatherData = response.data;
+            let iconCode = weatherData.weather[0].icon;
+            let iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
-            // Cache the new data
-            chrome.storage.local.set({
-              weatherDataCache: {
-                lat: latitude,
-                lon: longitude,
-                units: units,
-                data: response.data,
-                timestamp: now
-              }
-            });
+            // Fetch the icon data to cache it
+            fetch(iconUrl)
+              .then(res => res.blob())
+              .then(blob => {
+                let reader = new FileReader();
+                reader.onloadend = function () {
+                  let iconDataUri = reader.result;
+
+                  weather.classList.add('active');
+                  updateWeather(weatherData, units, location, iconDataUri);
+
+                  // Cache the new data with icon
+                  chrome.storage.local.set({
+                    weatherDataCache: {
+                      lat: latitude,
+                      lon: longitude,
+                      units: units,
+                      data: weatherData,
+                      timestamp: now,
+                      iconDataUri: iconDataUri
+                    }
+                  });
+                }
+                reader.readAsDataURL(blob);
+              })
+              .catch(err => {
+                console.error("Failed to cache weather icon:", err);
+                // Fallback: render without cached icon (will load from URL)
+                weather.classList.add('active');
+                updateWeather(weatherData, units, location);
+
+                // Cache without icon data
+                chrome.storage.local.set({
+                  weatherDataCache: {
+                    lat: latitude,
+                    lon: longitude,
+                    units: units,
+                    data: weatherData,
+                    timestamp: now
+                  }
+                });
+              });
           })
           .catch((error) => {
             console.error(error);
@@ -94,10 +128,16 @@
     });
   }
 
-  function updateWeather(data, units, location) {
+  function updateWeather(data, units, location, iconDataUri = null) {
     temperatureText.innerHTML = Math.round(data.main.temp) + '&deg;'; // Added Math.round for better display
     unitText.innerHTML = parseUnits(units);
-    conditionIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+    if (iconDataUri) {
+      conditionIcon.src = iconDataUri;
+    } else {
+      conditionIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    }
+
     conditionIcon.alt = data.weather[0].description;
     conditionText.innerHTML = data.weather[0].description;
     weatherLocationText.innerHTML = location;

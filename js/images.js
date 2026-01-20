@@ -19,7 +19,7 @@ function loadImage(force = false) {
       chrome.storage.local.get(['cachedImage', 'imageTimestamp'], function (cache) {
         let now = Date.now();
         // 1 hour cache = 3600000 ms
-        if (!force && cache.cachedImage && cache.imageTimestamp && (now - cache.imageTimestamp < 3600000)) {
+        if (!force && cache.cachedImage && cache.cachedImage.dataUri && cache.imageTimestamp && (now - cache.imageTimestamp < 3600000)) {
           setImage(cache.cachedImage);
         } else {
           getImages(url, options.apiKeys.unsplash, function (result) {
@@ -32,11 +32,29 @@ function loadImage(force = false) {
 
             if (fetchedImages.length > 0) {
               let image = fetchedImages[0];
-              setImage(image);
-              chrome.storage.local.set({
-                cachedImage: image,
-                imageTimestamp: now
-              });
+
+              // Fetch the actual image data to cache it
+              fetch(image.url)
+                .then(response => response.blob())
+                .then(blob => {
+                  let reader = new FileReader();
+                  reader.onloadend = function () {
+                    let base64data = reader.result;
+                    image.dataUri = base64data; // Attach Data URI
+
+                    setImage(image);
+                    chrome.storage.local.set({
+                      cachedImage: image,
+                      imageTimestamp: now
+                    });
+                  }
+                  reader.readAsDataURL(blob);
+                })
+                .catch(err => {
+                  console.error("Failed to cache image data:", err);
+                  // Fallback to URL if caching fails
+                  setImage(image);
+                });
             }
           });
         }
@@ -59,7 +77,8 @@ function getImages(url, apiKey, callback) {
 }
 
 function setImage(image) {
-  background.style.backgroundImage = 'url(' + image.url + ')';
+  let imageUrl = image.dataUri || image.url;
+  background.style.backgroundImage = 'url(' + imageUrl + ')';
   setCredit(image.user);
 }
 
