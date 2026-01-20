@@ -31,7 +31,8 @@ Same process as installing. Your API keys and settings are saved in the browser 
 ![Bookmarks](/screenshots/bmarks.png?raw=true)
 
 ## License
-Same as the old ZenPage for old code. Which is, who knows. New code/changes are under the UNLICENSE license.
+Same as the old ZenPage for old code. Which is, who knows.  
+New code/changes are under the UNLICENSE license.
 
 ## Contributing
-Please fork.
+Contributions will have to follow the same license I'm using for new code (UNLICENSE) and follow current structure guidelines. Currently, I'm only open towards localization contribs.
