@@ -1,2 +1,15 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:100, 300, 400,500,700");
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:400,700");
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/Inter-Bold.woff2') format('woff2');
+}

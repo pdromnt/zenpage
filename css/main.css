@@ -2,6 +2,7 @@
 html {
   box-sizing: border-box;
 }
+
 *,
 *:before,
 *:after {
@@ -16,7 +17,7 @@ body {
 body {
   position: relative;
   width: 100%;
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", sans-serif;
   color: #eee;
 }
 
@@ -49,6 +50,7 @@ h2 {
   font-size: 2rem;
   text-align: center;
 }
+
 .container {
   width: 70%;
   margin: 0 auto;
@@ -124,6 +126,7 @@ a:focus {
   margin: 0.5rem 0;
   text-transform: capitalize;
 }
+
 .weather__unit {
   margin-top: 0.5rem;
   font-size: 1.8rem;
@@ -186,7 +189,7 @@ a:focus {
 }
 
 .hint span:first-child {
-  font-family: "Roboto Mono";
+  font-family: "Inter", monospace;
   padding: 0.4rem 0.8rem;
   background-color: #000;
 }
@@ -362,7 +365,7 @@ a:focus {
   padding: 0.4rem 0.6rem;
 }
 
-.bookmark-option-category > ul > li > input:last-of-type {
+.bookmark-option-category>ul>li>input:last-of-type {
   margin-left: 0.5rem;
 }
 
@@ -408,6 +411,7 @@ a:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -417,6 +421,7 @@ a:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -426,6 +431,7 @@ a:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -435,6 +441,7 @@ a:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -444,6 +451,7 @@ a:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
