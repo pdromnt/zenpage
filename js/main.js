@@ -1,6 +1,7 @@
 (function () {
   let timeDisplay = document.querySelector('.time');
   let dateDisplay = document.querySelector('.date');
+  let greetingDisplay = document.querySelector('.greeting');
   let hintRight = document.querySelector('.hint.right');
   let hintBottom = document.querySelector('.hint.bottom');
 
@@ -95,9 +96,24 @@
   }
 
   function tick() {
-    let t = moment().format("HH:mm:ss");
-    let d = moment().format("dddd, MMMM Do YYYY");
+    let now = moment();
+    let hour = now.hour();
+    let greeting = "Good morning! ☀️";
+
+    if (hour >= 12 && hour < 18) {
+      greeting = "Good afternoon! 🌤️";
+    } else if (hour >= 18 && hour < 22) {
+      greeting = "Good evening! 🌙";
+    } else if (hour >= 22 || hour < 5) {
+      greeting = "Good night! 🦉";
+    }
+
+    let t = now.format("HH:mm:ss");
+    let d = now.format("dddd, MMMM Do YYYY");
+
     timeDisplay.textContent = t;
     dateDisplay.textContent = d;
+    greetingDisplay.textContent = greeting;
+    document.title = greeting;
   }
 })();
