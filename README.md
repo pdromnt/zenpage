@@ -9,7 +9,8 @@ Forked from the original [ZenPage](https://github.com/jack-doyle/zenpage) to fix
 * Categorizable bookmarks
 * Weather widget displaying information from [OpenWeatherMap](https://openweathermap.org/)
 * Manifest V3 support
-* Massively improved performance and code over the original
+* Massively improved performance
+* Localization support
 
 ## Installing
 1. First click in Code > Download Zip > Extract zip  
