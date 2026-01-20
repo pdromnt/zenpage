@@ -85,7 +85,7 @@ let siteInfo = [{
 {
   name: 'imdb',
   icon: 'fa-imdb',
-  url: 'http://imdb.com'
+  url: 'https://imdb.com'
 }, {
   name: 'instagram',
   icon: 'fa-instagram',

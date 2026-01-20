@@ -284,7 +284,7 @@ function getFormattedLocation(position, callback) {
   let longitude = position.coords.longitude;
   let location = '';
 
-  fetch(`http://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${latitude},${longitude}`)
+  fetch(`https://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${latitude},${longitude}`)
     .then(response => response.json().then(data => ({ status: response.status, data })))
     .then((response) => {
       if (!response.data.data.length) {

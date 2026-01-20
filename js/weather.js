@@ -14,7 +14,7 @@ let positionStackApiKey = config.positionStackApiKey;
   }, function (options) {
     if (options.weather.show) {
       // Get Lat & Long from saved location.
-      fetch(`http://api.positionstack.com/v1/forward?access_key=${positionStackApiKey}&query=${options.weather.location}`)
+      fetch(`https://api.positionstack.com/v1/forward?access_key=${positionStackApiKey}&query=${options.weather.location}`)
         .then(response => response.json().then(data => ({ status: response.status, data })))
         .then((response) => {
           fetchWeather(response.data.data[0].latitude, response.data.data[0].longitude, options.weather.units, options.weather.location);
