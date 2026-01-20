@@ -249,7 +249,7 @@ button.geolocate:hover {
 }
 
 .remove-link-btn {
-  background-color: #eee;
+  background-color: #f4f4f4;
   color: #666;
   width: 30px;
   height: 30px;
@@ -264,8 +264,8 @@ button.geolocate:hover {
 }
 
 .remove-link-btn:hover {
-  background-color: #ddd;
-  color: #333;
+  background-color: #f4f4f4;
+  color: #ff4242;
 }
 
 .add-link-btn {

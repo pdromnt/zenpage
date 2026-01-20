@@ -61,7 +61,7 @@
         // Show wait tooltip
         let hintRight = document.querySelector('.hint.right');
         let originalText = hintRight.innerHTML;
-        hintRight.innerHTML = '<span>Please wait...</span>';
+        hintRight.innerHTML = '<span>Rate limit, please wait (5 mins)...</span>';
         hintRight.classList.add('animated', 'jello');
 
         setTimeout(() => {
