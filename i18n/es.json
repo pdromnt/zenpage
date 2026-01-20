@@ -59,5 +59,15 @@
     "api_err_geolocation_unsupported": "Su navegador no admite la geolocalización. Ingrese manualmente su ubicación en el cuadro de texto.",
     "api_err_location_format": "No se pudo obtener la información de ubicación formateada. Usando latitud y longitud.",
     "api_err_location_fetch": "Error al recuperar la información de ubicación de los servidores. Intentando usar latitud y longitud...",
-    "err_generic": "Error"
+    "err_generic": "Error",
+    "sidebar_data": "Gestión de Datos",
+    "data_management_title": "Gestión de Datos",
+    "export_bookmarks_csv": "Exportar Marcadores (CSV)",
+    "export_bookmarks_json": "Exportar Marcadores (JSON)",
+    "export_all": "Exportar Todas las Configuraciones (JSON)",
+    "import_bookmarks": "Importar Marcadores",
+    "import_all": "Importar Todas las Configuraciones",
+    "import_success": "¡Importación exitosa! Configuraciones actualizadas.",
+    "import_error": "Error al importar. Por favor, compruebe el formato del archivo.",
+    "data_management_desc": "Exportar o importar sus configuraciones y marcadores. Tenga en cuenta que solo puede importar contenido exportado desde la extensión, no de otros lugares."
 }

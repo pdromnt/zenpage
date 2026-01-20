@@ -251,21 +251,27 @@ button.geolocate:hover {
 .remove-link-btn {
   background-color: #f4f4f4;
   color: #666;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 4px;
   font-weight: bold;
-  border: none;
+  border: 1px solid #ddd;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .remove-link-btn:hover {
-  background-color: #f4f4f4;
-  color: #ff4242;
+  background-color: #fee;
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.remove-link-btn i {
+  pointer-events: none;
 }
 
 .add-link-btn {
@@ -363,6 +369,10 @@ details[open] summary:after {
 .flex-gap {
   display: flex;
   gap: 20px;
+}
+
+.flex-gap.wrap {
+  flex-wrap: wrap;
 }
 
 .flex-start {

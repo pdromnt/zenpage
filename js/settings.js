@@ -305,7 +305,7 @@ function createLinkElement(title = '', url = '') {
   urlInput.value = url;
 
   let removeBtn = document.createElement('button');
-  removeBtn.textContent = 'X';
+  removeBtn.innerHTML = '<i class="lni lni-trash-can"></i>';
   removeBtn.className = 'remove-link-btn';
   removeBtn.onclick = function () {
     li.remove();
@@ -482,6 +482,109 @@ function setLocation(location) {
     locationFetchStatus.textContent = '';
   }, 1000);
 }
+
+// Data Management Logic
+
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type: type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportBookmarks(format) {
+  chrome.storage.sync.get({ bookmarks: [] }, function (items) {
+    if (format === 'json') {
+      downloadFile('zenpage_bookmarks.json', JSON.stringify(items.bookmarks, null, 2), 'application/json');
+    } else if (format === 'csv') {
+      let csv = 'Category,Title,URL\n';
+      items.bookmarks.forEach(cat => {
+        cat.links.forEach(link => {
+          csv += `"${cat.category.replace(/"/g, '""')}","${link.title.replace(/"/g, '""')}","${link.url.replace(/"/g, '""')}"\n`;
+        });
+      });
+      downloadFile('zenpage_bookmarks.csv', csv, 'text/csv');
+    }
+  });
+}
+
+function exportAllSettings() {
+  chrome.storage.sync.get(null, function (items) {
+    downloadFile('zenpage_settings_backup.json', JSON.stringify(items, null, 2), 'application/json');
+  });
+}
+
+async function handleImport(file, type) {
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    try {
+      const content = e.target.result;
+      if (type === 'all') {
+        const data = JSON.parse(content);
+        chrome.storage.sync.set(data, function () {
+          alert(i18n.t('import_success'));
+          window.location.reload();
+        });
+      } else if (type === 'bookmarks') {
+        if (file.name.endsWith('.json')) {
+          const bookmarks = JSON.parse(content);
+          chrome.storage.sync.set({ bookmarks: bookmarks }, function () {
+            alert(i18n.t('import_success'));
+            restoreBookmarks();
+          });
+        } else if (file.name.endsWith('.csv')) {
+          // Semi-robust CSV parsing (Categories, Title, URL)
+          const lines = content.split('\n');
+          const bookmarks = [];
+          const categories = {};
+
+          // Skip header
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+
+            // Handle quoted CSV values
+            const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            if (parts && parts.length >= 3) {
+              const catName = parts[0].replace(/^"|"$/g, '').replace(/""/g, '"');
+              const title = parts[1].replace(/^"|"$/g, '').replace(/""/g, '"');
+              const url = parts[2].replace(/^"|"$/g, '').replace(/""/g, '"');
+
+              if (!categories[catName]) {
+                categories[catName] = { category: catName, links: [] };
+                bookmarks.push(categories[catName]);
+              }
+              categories[catName].links.push({ title, url });
+            }
+          }
+
+          chrome.storage.sync.set({ bookmarks: bookmarks }, function () {
+            alert(i18n.t('import_success'));
+            restoreBookmarks();
+          });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert(i18n.t('import_error'));
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('export-bookmarks-csv').addEventListener('click', () => exportBookmarks('csv'));
+document.getElementById('export-bookmarks-json').addEventListener('click', () => exportBookmarks('json'));
+document.getElementById('export-all').addEventListener('click', exportAllSettings);
+
+document.getElementById('import-bookmarks-file').addEventListener('change', (e) => handleImport(e.target.files[0], 'bookmarks'));
+document.getElementById('import-all-file').addEventListener('change', (e) => handleImport(e.target.files[0], 'all'));
 
 document.querySelector('.geolocate').addEventListener('click', getCurrentLocation);
 

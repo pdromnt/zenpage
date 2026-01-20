@@ -20,6 +20,7 @@
           <li><a href="#bookmarks" data-i18n="sidebar_bookmarks">Bookmarks</a></li>
           <li><a href="#weather" data-i18n="sidebar_weather">Weather</a></li>
           <li><a href="#api-keys" data-i18n="sidebar_api_keys">API Keys</a></li>
+          <li><a href="#data" data-i18n="sidebar_data">Data Management</a></li>
         </ul>
       </nav>
     </aside>
@@ -146,6 +147,38 @@
           </div>
         </details>
         <br>
+      </section>
+
+      <section id="data">
+        <h2 data-i18n="data_management_title">Data Management</h2>
+        <p data-i18n="data_management_desc">Export or import your settings and bookmarks. JSON format is recommended for
+          complete backups.</p>
+
+        <div class="api-service-group">
+          <h3 data-i18n="sidebar_bookmarks">Bookmarks</h3>
+          <div class="flex-gap wrap">
+            <button type="button" id="export-bookmarks-csv" data-i18n="export_bookmarks_csv">Export Bookmarks
+              (CSV)</button>
+            <button type="button" id="export-bookmarks-json" data-i18n="export_bookmarks_json">Export Bookmarks
+              (JSON)</button>
+          </div>
+          <div class="input-group mt-10">
+            <label class="input-information" for="import-bookmarks-file" data-i18n="import_bookmarks">Import
+              Bookmarks</label>
+            <input type="file" id="import-bookmarks-file" accept=".json,.csv" class="width-auto">
+          </div>
+        </div>
+
+        <div class="api-service-group">
+          <h3 data-i18n="sidebar_general">All Settings</h3>
+          <div class="flex-gap wrap">
+            <button type="button" id="export-all" data-i18n="export_all">Export All Settings (JSON)</button>
+          </div>
+          <div class="input-group mt-10">
+            <label class="input-information" for="import-all-file" data-i18n="import_all">Import All Settings</label>
+            <input type="file" id="import-all-file" accept=".json" class="width-auto">
+          </div>
+        </div>
       </section>
 
       <div class="spacer-60"></div>

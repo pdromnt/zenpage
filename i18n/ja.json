@@ -59,5 +59,15 @@
     "api_err_geolocation_unsupported": "お使いのブラウザは位置情報をサポートしていません。テキストボックスに場所を手動で入力してください。",
     "api_err_location_format": "整形された位置情報の取得に失敗しました。緯度と経度を使用します。",
     "api_err_location_fetch": "サーバーから位置情報を取得できませんでした。緯度と経度の使用を試みています...",
-    "err_generic": "エラー"
+    "err_generic": "エラー",
+    "sidebar_data": "データ管理",
+    "data_management_title": "データ管理",
+    "export_bookmarks_csv": "ブックマークを書き出す (CSV)",
+    "export_bookmarks_json": "ブックマークを書き出す (JSON)",
+    "export_all": "すべての設定を書き出す (JSON)",
+    "import_bookmarks": "ブックマークを読み込む",
+    "import_all": "すべての設定を読み込む",
+    "import_success": "読み込みに成功しました！設定が更新されました。",
+    "import_error": "読み込みに失敗しました。ファイル形式を確認してください。",
+    "data_management_desc": "設定やブックマークをエクスポートまたはインポートします。拡張機能からエクスポートされたコンテンツのみをインポートでき、他の場所からのものはインポートできないことに注意してください。"
 }

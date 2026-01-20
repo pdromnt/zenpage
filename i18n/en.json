@@ -59,5 +59,15 @@
   "api_err_geolocation_unsupported": "Your browser doesn't support geolocation. Please manually enter your location in the text box.",
   "api_err_location_format": "Failed to get formatted location information. Using latitude and longitude.",
   "api_err_location_fetch": "Error fetching location information from servers. Attempting to use latitude and longitude...",
-  "err_generic": "Error"
+  "err_generic": "Error",
+  "sidebar_data": "Data Management",
+  "data_management_title": "Data Management",
+  "export_bookmarks_csv": "Export Bookmarks (CSV)",
+  "export_bookmarks_json": "Export Bookmarks (JSON)",
+  "export_all": "Export All Settings (JSON)",
+  "import_bookmarks": "Import Bookmarks",
+  "import_all": "Import All Settings",
+  "import_success": "Import successful! Settings updated.",
+  "import_error": "Import failed. Please check the file format.",
+  "data_management_desc": "Export or import your settings and bookmarks. Note that you can only import content exported from the extension, not from somewhere else."
 }
