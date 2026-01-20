@@ -11,7 +11,16 @@ fetch('data/sites.json')
 
       let label = document.createElement('label');
       label.htmlFor = site.id;
-      label.textContent = site.name;
+      label.className = 'flex-start gap-10';
+
+      let icon = document.createElement('i');
+      icon.className = 'lni ' + site.icon;
+
+      let text = document.createElement('span');
+      text.textContent = site.name;
+
+      label.appendChild(icon);
+      label.appendChild(text);
 
       let input = document.createElement('input');
       input.id = site.id;

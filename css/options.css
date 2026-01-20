@@ -365,6 +365,19 @@ details[open] summary:after {
   gap: 20px;
 }
 
+.flex-start {
+  display: flex;
+  align-items: center;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.lni {
+  font-size: 1.2rem;
+}
+
 .width-auto {
   width: auto !important;
 }

@@ -30,7 +30,7 @@ function makeLink(siteInfo) {
   a.href = siteInfo.url;
 
   let icon = document.createElement('span');
-  icon.classList.add('fa', siteInfo.icon);
+  icon.classList.add('lni', siteInfo.icon);
 
   a.appendChild(icon);
   return a;
