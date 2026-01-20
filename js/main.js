@@ -18,9 +18,8 @@
     } else if (closeBtn.contains(e.target) && bookmarks.classList.contains('open')) {
       closeBookmarks();
     } else if (loadImageBtn.contains(e.target)) {
-      document.querySelector('.hint.right').classList.add('animated', 'jello');
       document.querySelector('.hint.right').classList.remove('animated', 'jello');
-      loadImage();
+      handleImageReload();
     }
   });
 
@@ -28,8 +27,7 @@
     if (event.key === 'b' && event.ctrlKey && !bookmarks.classList.contains('open')) {
       openBookmarks();
     } else if (event.key === 'c' && event.ctrlKey) {
-      document.querySelector('.hint.right').classList.add('animated', 'jello');
-      loadImage();
+      handleImageReload();
     } else if (event.key === 'Escape' && bookmarks.classList.contains('open')) {
       closeBookmarks();
     }
@@ -40,6 +38,45 @@
   // Schedule ticks, then tick for the first time.
   setInterval(tick, 1000);
   tick();
+
+  checkApiKeys();
+
+  function checkApiKeys() {
+    chrome.storage.sync.get({ apiKeys: {} }, function(result) {
+      let keys = result.apiKeys;
+      if (!keys.unsplash || !keys.unsplashSecret || !keys.positionStack || !keys.openWeather) {
+        document.querySelector('.missing-keys-hint').style.display = 'block';
+      }
+    });
+  }
+
+  function handleImageReload() {
+    chrome.storage.sync.get({ imageReloads: [] }, function(result) {
+      let reloads = result.imageReloads;
+      let now = Date.now();
+      // Filter reloads from the last 5 minutes (300000 ms)
+      reloads = reloads.filter(timestamp => now - timestamp < 300000);
+
+      if (reloads.length >= 3) {
+        // Show wait tooltip
+        let hintRight = document.querySelector('.hint.right');
+        let originalText = hintRight.innerHTML;
+        hintRight.innerHTML = '<span>Please wait...</span>';
+        hintRight.classList.add('animated', 'jello');
+
+        setTimeout(() => {
+          hintRight.innerHTML = originalText;
+        }, 3000);
+      } else {
+        // Allow reload
+        reloads.push(now);
+        chrome.storage.sync.set({ imageReloads: reloads });
+
+        document.querySelector('.hint.right').classList.add('animated', 'jello');
+        loadImage();
+      }
+    });
+  }
 
   function openBookmarks() {
     bookmarks.classList.add('open');

@@ -296,3 +296,10 @@ details summary:after {
 details[open] summary:after {
   content: "-";
 }
+
+.api-link {
+  font-size: 0.8em;
+  font-weight: normal;
+  color: var(--primary-color);
+  margin-left: 5px;
+}

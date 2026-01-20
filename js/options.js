@@ -7,6 +7,7 @@ let bookmarksList = document.getElementById('bookmarks-list');
 let addCategoryBtn = document.getElementById('add-category');
 
 let unsplashKeyOption = document.querySelector('#unsplash-key');
+let unsplashSecretOption = document.querySelector('#unsplash-secret');
 let positionStackKeyOption = document.querySelector('#positionstack-key');
 let openWeatherKeyOption = document.querySelector('#openweather-key');
 
@@ -130,6 +131,7 @@ function saveWeatherOptions() {
 function saveApiKeys() {
   let apiKeys = {
     unsplash: unsplashKeyOption.value.trim(),
+    unsplashSecret: unsplashSecretOption.value.trim(),
     positionStack: positionStackKeyOption.value.trim(),
     openWeather: openWeatherKeyOption.value.trim()
   };
@@ -317,6 +319,9 @@ function restoreApiKeys() {
   }, function (options) {
     if (options.apiKeys.unsplash) {
       unsplashKeyOption.value = options.apiKeys.unsplash;
+    }
+    if (options.apiKeys.unsplashSecret) {
+      unsplashSecretOption.value = options.apiKeys.unsplashSecret;
     }
     if (options.apiKeys.positionStack) {
       positionStackKeyOption.value = options.apiKeys.positionStack;
