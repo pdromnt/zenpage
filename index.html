@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome</title>
 
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
 
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/fonts.css">
@@ -33,6 +32,9 @@
     <div class="search">
       <input type="text" class="search__input" name="query" placeholder="Google" autofocus>
     </div>
+    <div class="missing-keys-hint fade-animation">
+      <span>Check the settings page to input your API keys and get all features working!</span>
+    </div>
     <div class="break"></div>
     <div class="quick-links flex"></div>
   </div>
@@ -48,7 +50,7 @@
   <div class="weather fade-animation">
     <div class="weather__heading">
       <h3 class="weather__temperature"></h3><span class="weather__unit"></span>
-      <i class="weather__condition"></i>
+      <img class="weather__condition" src="" alt="">
     </div>
     <div class="weather__subheading">
       <h4 class="weather__condition-text"></h4>&nbsp;&centerdot;&nbsp;
@@ -60,14 +62,12 @@
 
   <div class="credit fade-animation"></div>
 
-  <script src="js/sanitizer.js"></script>
-  <script src="js/config.js"></script>
   <script src="js/weather.js"></script>
   <script src="js/search.js"></script>
   <script src="js/images.js"></script>
   <script src="js/moment.js"></script>
   <script src="js/bookmarks.js"></script>
-  <script src="js/site-info.js"></script>
+
   <script src="js/quick-links.js"></script>
   <script src="js/main.js"></script>
 </body>

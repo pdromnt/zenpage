@@ -6,20 +6,26 @@ function loadQuickLinks() {
   chrome.storage.sync.get({
     selectedSites: []
   }, function (items) {
-    items.selectedSites
-      .filter(function (site) {
-        return site.selected;
-      })
-      .forEach(function (site) {
-        let link = makeLink(site);
-        quickLinks.appendChild(link);
+    // Fetch site data
+    fetch('data/sites.json')
+      .then(response => response.json())
+      .then(siteInfo => {
+        items.selectedSites
+          .filter(function (site) {
+            return site.selected;
+          })
+          .forEach(function (site) {
+            let info = find(site.name, siteInfo);
+            if (info) {
+              let link = makeLink(info);
+              quickLinks.appendChild(link);
+            }
+          });
       });
   });
 }
 
-function makeLink(site) {
-  let siteInfo = find(site.name);
-
+function makeLink(siteInfo) {
   let a = document.createElement('a');
   a.href = siteInfo.url;
 
@@ -30,8 +36,6 @@ function makeLink(site) {
   return a;
 }
 
-function find(siteName) {
-  return siteInfo.filter(function (site) {
-    return site.name === siteName;
-  })[0];
+function find(siteId, siteInfo) {
+  return siteInfo.find(site => site.id === siteId);
 }

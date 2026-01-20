@@ -8,28 +8,44 @@ let PATH_RANDOM = '/random';
 let PATH_UTM = '?utm_source=startpage&utm_medium=referral&utm_campaign=api-credit';
 let PARAM_FEATURED = 'featured=true';
 let PARAM_ORIENTATION = 'orientation=landscape';
-let PARAM_COUNT = 'count=20';
+let PARAM_COUNT = 'count=1';
 let url = PATH_BASE + PATH_RANDOM + '?' + PARAM_FEATURED + '&' + PARAM_ORIENTATION + '&' + PARAM_COUNT;
 
-function loadImage() {
-  if (images.length === 0) {
-    getImages(url, function (result) {
-      images = JSON.parse(result).map(function (image) {
-        return {
-          url: image.urls.full,
-          user: image.user
-        };
-      });
+function loadImage(force = false) {
+  chrome.storage.sync.get({
+    apiKeys: {}
+  }, function (options) {
+    if (options.apiKeys.unsplash) {
+      chrome.storage.local.get(['cachedImage', 'imageTimestamp'], function (cache) {
+        let now = Date.now();
+        // 1 hour cache = 3600000 ms
+        if (!force && cache.cachedImage && cache.imageTimestamp && (now - cache.imageTimestamp < 3600000)) {
+          setImage(cache.cachedImage);
+        } else {
+          getImages(url, options.apiKeys.unsplash, function (result) {
+            let fetchedImages = JSON.parse(result).map(function (image) {
+              return {
+                url: image.urls.full,
+                user: image.user
+              };
+            });
 
-      setImage(images[0]);
-    });
-  } else {
-    let current = images.pop();
-    setImage(current);
-  }
+            if (fetchedImages.length > 0) {
+              let image = fetchedImages[0];
+              setImage(image);
+              chrome.storage.local.set({
+                cachedImage: image,
+                imageTimestamp: now
+              });
+            }
+          });
+        }
+      });
+    }
+  });
 }
 
-function getImages(url, callback) {
+function getImages(url, apiKey, callback) {
 
   let xhr = new XMLHttpRequest();
 
@@ -38,25 +54,31 @@ function getImages(url, callback) {
       callback(xhr.responseText);
   }
   xhr.open("GET", url, true); // true for asynchronous
-  xhr.setRequestHeader('Authorization', 'Client-ID ' + config.unsplashKey);
+  xhr.setRequestHeader('Authorization', 'Client-ID ' + apiKey);
   xhr.send(null);
 }
 
 function setImage(image) {
   background.style.backgroundImage = 'url(' + image.url + ')';
-  credit.innerHTML = Sanitizer.escapeHTML(makeAttributionUrl(image.user));
+  setCredit(image.user);
 }
 
-function makeAttributionUrl(user) {
-  let url =
-    '<a href="' +
-    user.links.html +
-    PATH_UTM +
-    '">Photo by ' +
-    user.name +
-    '</a> / <a href="https://unsplash.com">Unsplash</a>';
+function setCredit(user) {
+  credit.textContent = ''; // Clear existing content
 
-  return url;
+  let aUser = document.createElement('a');
+  aUser.href = user.links.html + PATH_UTM;
+  aUser.textContent = 'Photo by ' + user.name;
+
+  let separator = document.createTextNode(' / ');
+
+  let aUnsplash = document.createElement('a');
+  aUnsplash.href = 'https://unsplash.com';
+  aUnsplash.textContent = 'Unsplash';
+
+  credit.appendChild(aUser);
+  credit.appendChild(separator);
+  credit.appendChild(aUnsplash);
 }
 
 loadImage();

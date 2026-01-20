@@ -1,10 +1,49 @@
-let sitesOptions = document.querySelectorAll('.site');
+let quickLinksContainer = document.querySelector('.quick-links-container');
+let sitesOptions = []; // Will be populated dynamically
+
+// Fetch sites data
+fetch('data/sites.json')
+  .then(response => response.json())
+  .then(sites => {
+    sites.forEach(site => {
+      let siteDiv = document.createElement('div');
+      siteDiv.className = 'site';
+
+      let label = document.createElement('label');
+      label.htmlFor = site.id;
+      label.textContent = site.name;
+
+      let input = document.createElement('input');
+      input.id = site.id;
+      input.type = 'checkbox';
+
+      siteDiv.appendChild(label);
+      siteDiv.appendChild(input);
+      quickLinksContainer.appendChild(siteDiv);
+    });
+
+    // Update the sitesOptions list after rendering
+    sitesOptions = document.querySelectorAll('.site');
+
+    // Call restore after rendering
+    restoreQuickLinks();
+  });
 let weatherLocationOption = document.querySelector('#weather-location');
 let weatherCelsiusOption = document.querySelector('#celsius');
 let weatherFahrenheitOption = document.querySelector('#fahrenheit');
 let weatherDisplayOption = document.querySelector('#display-weather');
+let bookmarksList = document.getElementById('bookmarks-list');
+let addCategoryBtn = document.getElementById('add-category');
+
+let unsplashKeyOption = document.querySelector('#unsplash-key');
+let unsplashSecretOption = document.querySelector('#unsplash-secret');
+let positionStackKeyOption = document.querySelector('#positionstack-key');
+let openWeatherKeyOption = document.querySelector('#openweather-key');
 
 let locationFetchStatus = document.getElementById('location-status');
+
+const MAX_CATEGORIES = 5;
+const MAX_LINKS = 10;
 
 function saveBookmarks() {
   let bookmarks = [];
@@ -16,53 +55,52 @@ function saveBookmarks() {
   categoryErrors.forEach(setEmpty);
   linkErrors.forEach(setEmpty);
 
-  // Validation
+  let hasError = false;
+
   bookmarksOptions.forEach(function (option, index) {
-    let categoryName = option.querySelector('input').value;
+    let categoryNameInput = option.querySelector('.category-name-input');
+    let categoryName = categoryNameInput.value.trim();
     let categoryLinks = option.querySelectorAll('.bookmark-option-link');
+
+    let categoryStatus = option.querySelector('.error.error--category-name');
+    let linkStatus = option.querySelector('.error.error--category-links');
 
     // Empty category name with at least one link
     if (categoryName.length === 0 && [].some.call(categoryLinks, validLink)) {
-      handleCategoryError('Category name cannot be empty.', index);
+      categoryStatus.textContent = 'Category name cannot be empty.';
+      hasError = true;
     }
 
     // Category name but no complete links
     if (categoryName.length > 0 && ![].some.call(categoryLinks, validLink)) {
-      handleCategoryError('Category must contain at least one bookmark.', index);
-    }
-
-    // Incomplete links
-    if ([].some.call(categoryLinks, incompleteLink)) {
-      handleLinkError(index);
+      categoryStatus.textContent = 'Category must contain at least one valid bookmark.';
+      hasError = true;
     }
   });
 
-  // If no errors
-  if ([].every.call(categoryErrors, isEmpty) && [].every.call(linkErrors, isEmpty)) {
+  if (!hasError) {
     bookmarksOptions.forEach(function (bookmark) {
-      let categoryName = bookmark.getElementsByTagName('input')[0].value;
-      let categoryLinksOptions = bookmark.getElementsByClassName('bookmark-option-link');
+      let categoryName = bookmark.querySelector('.category-name-input').value.trim();
+      let categoryLinksOptions = bookmark.querySelectorAll('.bookmark-option-link');
 
       let categoryLinks = [];
 
-      Array.prototype.forEach.call(categoryLinksOptions, function (link) {
-        let url = {
-          title: link.getElementsByTagName('input')[0].value,
-          url: link.getElementsByTagName('input')[1].value
-        };
+      categoryLinksOptions.forEach(function (link) {
+        let title = link.querySelector('.link-title').value.trim();
+        let url = link.querySelector('.link-url').value.trim();
 
-        categoryLinks.push(url);
+        if (title.length > 0 && url.length > 0) {
+          categoryLinks.push({ title: title, url: url });
+        }
       });
 
-      categoryLinks = categoryLinks.filter(function (link) { return link.title.length > 0 && link.url.length > 0 })
-
-      bookmarks.push({
-        category: categoryName,
-        links: categoryLinks
-      });
+      if (categoryName.length > 0 && categoryLinks.length > 0) {
+        bookmarks.push({
+          category: categoryName,
+          links: categoryLinks
+        });
+      }
     });
-
-    bookmarks = bookmarks.filter(function (bookmark) { return bookmark.category.length > 0 });
 
     chrome.storage.sync.set({
       bookmarks: bookmarks
@@ -75,24 +113,10 @@ function saveBookmarks() {
     node.textContent = '';
   }
 
-  function isEmpty(node) {
-    return node.textContent === '';
-  }
-
   function validLink(link) {
-    return [].every.call(link.querySelectorAll('input'), function (linkValue) {
-      return linkValue.value.length > 0;
-    });
-  }
-
-  function incompleteLink(link) {
-    let inputs = link.querySelectorAll('input');
-
-    return [].some.call(inputs, function (linkValue) {
-      return linkValue.value.length === 0;
-    }) && [].some.call(inputs, function (linkValue) {
-      return linkValue.value.length > 0;
-    });
+    let title = link.querySelector('.link-title').value.trim();
+    let url = link.querySelector('.link-url').value.trim();
+    return title.length > 0 && url.length > 0;
   }
 }
 
@@ -133,10 +157,26 @@ function saveWeatherOptions() {
   });
 }
 
+function saveApiKeys() {
+  let apiKeys = {
+    unsplash: unsplashKeyOption.value.trim(),
+    unsplashSecret: unsplashSecretOption.value.trim(),
+    positionStack: positionStackKeyOption.value.trim(),
+    openWeather: openWeatherKeyOption.value.trim()
+  };
+
+  chrome.storage.sync.set({
+    apiKeys: apiKeys
+  }, function () {
+    notifySave();
+  });
+}
+
 function saveOptions() {
   saveBookmarks();
   saveQuickLinks();
   saveWeatherOptions();
+  saveApiKeys();
 }
 
 function notifySave() {
@@ -144,91 +184,140 @@ function notifySave() {
   status.textContent = 'Saved.';
   setTimeout(function () {
     status.textContent = '';
-  }, 750);
+  }, 2000);
 }
 
-function handleCategoryError(message, index) {
-  let categoryStatus = document.querySelectorAll('.error.error--category-name')[index];
-  categoryStatus.textContent = message;
+function createCategoryElement(name = '', links = []) {
+  let li = document.createElement('li');
+  li.classList.add('bookmark-option-category');
+
+  let headerDiv = document.createElement('div');
+  headerDiv.classList.add('category-header');
+
+  let nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.classList.add('category-name-input');
+  nameInput.placeholder = 'Category Name';
+  nameInput.value = name;
+
+  let removeBtn = document.createElement('button');
+  removeBtn.textContent = 'Remove Category';
+  removeBtn.className = 'remove-btn';
+  removeBtn.onclick = function () {
+    li.remove();
+    checkLimits();
+  };
+
+  headerDiv.appendChild(nameInput);
+  headerDiv.appendChild(removeBtn);
+
+  let categoryError = document.createElement('span');
+  categoryError.classList.add('error', 'error--category-name');
+  headerDiv.appendChild(categoryError);
+
+  li.appendChild(headerDiv);
+
+  let linksUl = document.createElement('ul');
+  linksUl.classList.add('links-list');
+
+  let linksError = document.createElement('span');
+  linksError.classList.add('error', 'error--category-links');
+  li.appendChild(linksError);
+
+  li.appendChild(linksUl);
+
+  // Add initial links
+  if (links.length > 0) {
+    links.forEach(link => {
+      linksUl.appendChild(createLinkElement(link.title, link.url));
+    });
+  }
+
+  let addLinkBtn = document.createElement('button');
+  addLinkBtn.textContent = 'Add Link';
+  addLinkBtn.className = 'add-link-btn';
+  addLinkBtn.onclick = function () {
+    if (linksUl.children.length < MAX_LINKS) {
+      linksUl.appendChild(createLinkElement());
+    } else {
+      alert(`Maximum ${MAX_LINKS} links per category.`);
+    }
+  };
+
+  li.appendChild(addLinkBtn);
+
+  return li;
 }
 
-function handleLinkError(index) {
-  let linkStatus = document.querySelectorAll('.error.error--category-links')[index];
-  linkStatus.textContent = 'You have one or more incomplete bookmarks.';
+function createLinkElement(title = '', url = '') {
+  let li = document.createElement('li');
+  li.classList.add('bookmark-option-link');
+
+  let titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.placeholder = 'Name';
+  titleInput.classList.add('link-title');
+  titleInput.value = title;
+
+  let urlInput = document.createElement('input');
+  urlInput.type = 'text';
+  urlInput.placeholder = 'URL';
+  urlInput.classList.add('link-url');
+  urlInput.value = url;
+
+  let removeBtn = document.createElement('button');
+  removeBtn.textContent = 'X';
+  removeBtn.className = 'remove-link-btn';
+  removeBtn.onclick = function () {
+    li.remove();
+  };
+
+  li.appendChild(titleInput);
+  li.appendChild(urlInput);
+  li.appendChild(removeBtn);
+
+  return li;
+}
+
+function checkLimits() {
+  if (bookmarksList.children.length >= MAX_CATEGORIES) {
+    addCategoryBtn.disabled = true;
+    addCategoryBtn.textContent = 'Max Categories Reached';
+  } else {
+    addCategoryBtn.disabled = false;
+    addCategoryBtn.textContent = 'Add Category';
+  }
 }
 
 function restoreBookmarks() {
   chrome.storage.sync.get({ bookmarks: [] }, function (items) {
     let bookmarks = items.bookmarks;
-    let len = bookmarks.length > 3 ? bookmarks.length : 3; // Default 3 categories
 
-    let bookmarksList = document.querySelector('.bookmark-options ul');
+    // Clear list
+    bookmarksList.innerHTML = '';
 
-    for (let i = 0; i < len; i++) {
-      let bookmarkCategory = document.createElement('li');
-      bookmarkCategory.classList.add('bookmark-option-category');
+    bookmarks.forEach(bookmark => {
+      bookmarksList.appendChild(createCategoryElement(bookmark.category, bookmark.links));
+    });
 
-      let categoryInput = document.createElement('input');
-      categoryInput.placeholder = 'Category';
-      categoryInput.value = bookmarks[i] ? bookmarks[i].category : '';
-      categoryInput.type = 'text';
-
-      let categoryStatus = document.createElement('span');
-      categoryStatus.classList.add('error', 'error--category-name');
-
-      bookmarkCategory.appendChild(categoryInput);
-      bookmarkCategory.appendChild(categoryStatus);
-
-      let linksList = document.createElement('ul');
-      let linkStatus = document.createElement('span');
-      linkStatus.classList.add('error', 'error--category-links');
-      linksList.appendChild(linkStatus);
-
-      let linkElements = makeLinks(bookmarks[i] ? bookmarks[i].links : []);
-
-      linkElements.forEach(function (el) {
-        linksList.appendChild(el);
-      });
-
-      bookmarkCategory.appendChild(linksList);
-      bookmarksList.appendChild(bookmarkCategory);
-    }
+    checkLimits();
   });
 }
 
-function makeLinks(links) {
-  // let linksList = document.createElement('ul');
-  let linksElements = [];
-  let len = links.length > 3 ? links.length : 3; // Default 3 links per category
-
-  for (let j = 0; j < len; j++) {
-    let linkEl = document.createElement('li');
-    linkEl.classList.add('bookmark-option-link');
-
-    let linkTitleInput = document.createElement('input');
-    linkTitleInput.placeholder = 'Name';
-    linkTitleInput.value = links[j] ? links[j].title : '';
-    linkTitleInput.type = 'text';
-
-    let linkUrlInput = document.createElement('input');
-    linkUrlInput.placeholder = 'Url';
-    linkUrlInput.value = links[j] ? links[j].url : '';
-    linkUrlInput.type = 'text';
-
-    linkEl.appendChild(linkTitleInput);
-    linkEl.appendChild(linkUrlInput);
-    linksElements.push(linkEl);
+addCategoryBtn.addEventListener('click', function () {
+  if (bookmarksList.children.length < MAX_CATEGORIES) {
+    bookmarksList.appendChild(createCategoryElement());
+    checkLimits();
   }
-
-  return linksElements;
-}
+});
 
 function restoreQuickLinks() {
   chrome.storage.sync.get({
     selectedSites: []
   }, function (items) {
     items.selectedSites.forEach(function (site) {
-      document.getElementById(site.name).checked = site.selected;
+      let el = document.getElementById(site.name);
+      if (el) el.checked = site.selected;
     });
   });
 }
@@ -241,10 +330,11 @@ function restoreWeatherOptions() {
       weatherDisplayOption.checked = true;
     }
 
-    if (options.weather.units === 'metric') {
-      weatherCelsiusOption.checked = true;
-    } else if (options.weather.units === 'imperial') {
+    if (options.weather.units === 'imperial') {
       weatherFahrenheitOption.checked = true;
+    } else {
+      // Default to metric (Celsius)
+      weatherCelsiusOption.checked = true;
     }
 
     if (options.weather.location) {
@@ -253,10 +343,30 @@ function restoreWeatherOptions() {
   });
 }
 
+function restoreApiKeys() {
+  chrome.storage.sync.get({
+    apiKeys: {}
+  }, function (options) {
+    if (options.apiKeys.unsplash) {
+      unsplashKeyOption.value = options.apiKeys.unsplash;
+    }
+    if (options.apiKeys.unsplashSecret) {
+      unsplashSecretOption.value = options.apiKeys.unsplashSecret;
+    }
+    if (options.apiKeys.positionStack) {
+      positionStackKeyOption.value = options.apiKeys.positionStack;
+    }
+    if (options.apiKeys.openWeather) {
+      openWeatherKeyOption.value = options.apiKeys.openWeather;
+    }
+  });
+}
+
 function restoreOptions() {
   restoreQuickLinks();
   restoreBookmarks();
   restoreWeatherOptions();
+  restoreApiKeys();
 }
 
 function getCurrentLocation() {
@@ -264,7 +374,20 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function (position) {
       if (position) {
         locationFetchStatus.textContent = 'Fetching data, please wait...';
-        getFormattedLocation(position, setLocation);
+        // Prefer the value from the input if present, otherwise try storage
+        let key = positionStackKeyOption.value.trim();
+        if (key) {
+          getFormattedLocation(position, key, setLocation);
+        } else {
+          chrome.storage.sync.get({ apiKeys: {} }, function (result) {
+            if (result.apiKeys.positionStack) {
+              getFormattedLocation(position, result.apiKeys.positionStack, setLocation);
+            } else {
+              alert("Please enter a PositionStack API Key.");
+              locationFetchStatus.textContent = '';
+            }
+          });
+        }
       } else {
         alert('Error getting location. Please manually enter your location in the text box.');
       }
@@ -278,16 +401,15 @@ function getCurrentLocation() {
   saveWeatherOptions();
 }
 
-function getFormattedLocation(position, callback) {
-  let positionStackApiKey = config.positionStackApiKey;
+function getFormattedLocation(position, apiKey, callback) {
   let latitude = position.coords.latitude;
   let longitude = position.coords.longitude;
   let location = '';
 
-  fetch(`http://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${latitude},${longitude}`)
+  fetch(`https://api.positionstack.com/v1/reverse?access_key=${apiKey}&query=${latitude},${longitude}`)
     .then(response => response.json().then(data => ({ status: response.status, data })))
     .then((response) => {
-      if (!response.data.data.length) {
+      if (!response.data.data || !response.data.data.length) {
         alert('Failed to get formatted location information. Using latitude and longitude.');
         location = latitude.toString() + ', ' + longitude.toString();
       } else {
@@ -319,3 +441,11 @@ document.querySelector('.geolocate').addEventListener('click', getCurrentLocatio
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
+
+// Handle active state in sidebar
+document.querySelectorAll('.sidebar nav a').forEach(link => {
+  link.addEventListener('click', function () {
+    document.querySelectorAll('.sidebar nav a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});

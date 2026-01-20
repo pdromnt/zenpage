@@ -27,10 +27,14 @@ function loadBookmarks() {
         let newCategory = document.createElement('div');
         newCategory.classList.add('category');
 
-        let categoryNameHtml = `<div class="category__name">${bookmark.category}</div>`;
-        let categoryLinksHtml = buildLinks(bookmark.links);
+        let categoryNameDiv = document.createElement('div');
+        categoryNameDiv.classList.add('category__name');
+        categoryNameDiv.textContent = bookmark.category;
 
-        newCategory.innerHTML = Sanitizer.escapeHTML(categoryNameHtml + categoryLinksHtml);
+        let categoryLinksDiv = buildLinks(bookmark.links);
+
+        newCategory.appendChild(categoryNameDiv);
+        newCategory.appendChild(categoryLinksDiv);
         bookmarks.appendChild(newCategory);
       });
     }
@@ -38,12 +42,22 @@ function loadBookmarks() {
 }
 
 function buildLinks(links) {
-  let html = '<div class="category__links"><ul>';
+  let div = document.createElement('div');
+  div.classList.add('category__links');
+
+  let ul = document.createElement('ul');
 
   links.forEach(function (link) {
-    html += `<a href="${link.url}"><li>${link.title}</li></a>`;
+    let a = document.createElement('a');
+    a.href = link.url;
+
+    let li = document.createElement('li');
+    li.textContent = link.title;
+
+    a.appendChild(li);
+    ul.appendChild(a);
   });
 
-  html += '</ul></div>';
-  return html;
+  div.appendChild(ul);
+  return div;
 }

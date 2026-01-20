@@ -1,12 +1,15 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "ZenPage+",
   "description": "A personalised homepage featuring beautiful photography, categorised bookmarks and quick links to popular sites.",
-  "version": "2.0",
+  "version": "3.0",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "permissions": [
     "storage",
     "geolocation"
@@ -16,10 +19,12 @@
     "48": "./icons/icon-48.png",
     "128": "./icons/icon-128.png"
   },
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
-      "id": "club.pedromorais486.zenpageplus"
+      "id": "com.pdromnt.zenpageplus"
     }
   },
-  "content_security_policy": "script-src 'self' object-src 'self'"
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+  }
 }

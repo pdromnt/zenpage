@@ -114,9 +114,10 @@ a:focus {
 }
 
 .weather__condition {
-  font-family: Weather;
-  font-size: 6rem;
+  width: 6rem;
+  height: 6rem;
   margin-left: 1rem;
+  object-fit: contain;
 }
 
 .weather__condition-text {
@@ -446,4 +447,26 @@ a:focus {
   100% {
     opacity: 1;
   }
+}
+
+.missing-keys-hint {
+  display: none;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.missing-keys-hint span {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+}
+
+/* Utility helper classes to avoid inline styles for CSP */
+.blurred {
+  filter: blur(2px);
+}
+
+.show {
+  display: block;
 }

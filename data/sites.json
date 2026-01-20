@@ -1,0 +1,326 @@
+[
+    {
+        "id": "500px",
+        "name": "500px",
+        "icon": "fa-500px",
+        "url": "https://500px.com"
+    },
+    {
+        "id": "amazon",
+        "name": "Amazon",
+        "icon": "fa-amazon",
+        "url": "https://amazon.com"
+    },
+    {
+        "id": "bandcamp",
+        "name": "Bandcamp",
+        "icon": "fa-bandcamp",
+        "url": "https://bandcamp.com"
+    },
+    {
+        "id": "behance",
+        "name": "Behance",
+        "icon": "fa-behance",
+        "url": "https://behance.net"
+    },
+    {
+        "id": "bitbucket",
+        "name": "Bitbucket",
+        "icon": "fa-bitbucket",
+        "url": "https://bitbucket.com"
+    },
+    {
+        "id": "codepen",
+        "name": "Codepen",
+        "icon": "fa-codepen",
+        "url": "https://codepen.io"
+    },
+    {
+        "id": "deviantart",
+        "name": "Deviantart",
+        "icon": "fa-deviantart",
+        "url": "https://deviantart.com"
+    },
+    {
+        "id": "digg",
+        "name": "Digg",
+        "icon": "fa-digg",
+        "url": "https://digg.com"
+    },
+    {
+        "id": "dribbble",
+        "name": "Dribbble",
+        "icon": "fa-dribbble",
+        "url": "https://dribbble.com"
+    },
+    {
+        "id": "dropbox",
+        "name": "Dropbox",
+        "icon": "fa-dropbox",
+        "url": "https://dropbox.com"
+    },
+    {
+        "id": "etsy",
+        "name": "Etsy",
+        "icon": "fa-etsy",
+        "url": "https://etsy.com"
+    },
+    {
+        "id": "facebook",
+        "name": "Facebook",
+        "icon": "fa-facebook",
+        "url": "https://facebook.com"
+    },
+    {
+        "id": "flickr",
+        "name": "Flickr",
+        "icon": "fa-flickr",
+        "url": "https://flickr.com"
+    },
+    {
+        "id": "foursquare",
+        "name": "Foursquare",
+        "icon": "fa-foursquare",
+        "url": "https://foursquare.com"
+    },
+    {
+        "id": "free-code-camp",
+        "name": "Free Code Camp",
+        "icon": "fa-free-code-camp",
+        "url": "https://freecodecamp.com"
+    },
+    {
+        "id": "github",
+        "name": "Github",
+        "icon": "fa-github",
+        "url": "https://github.com"
+    },
+    {
+        "id": "gmail",
+        "name": "Gmail",
+        "icon": "fa-envelope",
+        "url": "https://gmail.com"
+    },
+    {
+        "id": "google",
+        "name": "Google",
+        "icon": "fa-google",
+        "url": "https://google.com"
+    },
+    {
+        "id": "hacker-news",
+        "name": "Hacker News",
+        "icon": "fa-hacker-news",
+        "url": "https://news.ycombinator.com"
+    },
+    {
+        "id": "imdb",
+        "name": "Imdb",
+        "icon": "fa-imdb",
+        "url": "https://imdb.com"
+    },
+    {
+        "id": "instagram",
+        "name": "Instagram",
+        "icon": "fa-instagram",
+        "url": "https://instagram.com"
+    },
+    {
+        "id": "jsfiddle",
+        "name": "Jsfiddle",
+        "icon": "fa-jsfiddle",
+        "url": "https://jsfiddle.net"
+    },
+    {
+        "id": "lastfm",
+        "name": "Lastfm",
+        "icon": "fa-lastfm",
+        "url": "https://last.fm"
+    },
+    {
+        "id": "linkedin",
+        "name": "Linkedin",
+        "icon": "fa-linkedin",
+        "url": "https://linkedin.com"
+    },
+    {
+        "id": "medium",
+        "name": "Medium",
+        "icon": "fa-medium",
+        "url": "https://medium.com"
+    },
+    {
+        "id": "meetup",
+        "name": "Meetup",
+        "icon": "fa-meetup",
+        "url": "https://meetup.com"
+    },
+    {
+        "id": "mixcloud",
+        "name": "Mixcloud",
+        "icon": "fa-mixcloud",
+        "url": "https://mixcloud.com"
+    },
+    {
+        "id": "pinterest",
+        "name": "Pinterest",
+        "icon": "fa-pinterest",
+        "url": "https://pinterest.com"
+    },
+    {
+        "id": "product-hunt",
+        "name": "Product Hunt",
+        "icon": "fa-product-hunt",
+        "url": "https://producthunt.com"
+    },
+    {
+        "id": "quora",
+        "name": "Quora",
+        "icon": "fa-quora",
+        "url": "https://quora.com"
+    },
+    {
+        "id": "reddit",
+        "name": "Reddit",
+        "icon": "fa-reddit",
+        "url": "https://reddit.com"
+    },
+    {
+        "id": "sellsy",
+        "name": "Sellsy",
+        "icon": "fa-sellsy",
+        "url": "https://sellsy.com"
+    },
+    {
+        "id": "skype",
+        "name": "Skype",
+        "icon": "fa-skype",
+        "url": "https://skype.com"
+    },
+    {
+        "id": "slack",
+        "name": "Slack",
+        "icon": "fa-slack",
+        "url": "https://slack.com"
+    },
+    {
+        "id": "soundcloud",
+        "name": "Soundcloud",
+        "icon": "fa-soundcloud",
+        "url": "https://soundcloud.com"
+    },
+    {
+        "id": "spotify",
+        "name": "Spotify",
+        "icon": "fa-spotify",
+        "url": "https://spotify.com"
+    },
+    {
+        "id": "stack-exchange",
+        "name": "Stack Exchange",
+        "icon": "fa-stack-exchange",
+        "url": "https://stackexchange.com"
+    },
+    {
+        "id": "stack-overflow",
+        "name": "Stack Overflow",
+        "icon": "fa-stack-overflow",
+        "url": "https://stackoverflow.com"
+    },
+    {
+        "id": "steam",
+        "name": "Steam",
+        "icon": "fa-steam",
+        "url": "https://store.steampowered.com"
+    },
+    {
+        "id": "stumbleupon",
+        "name": "Stumbleupon",
+        "icon": "fa-stumbleupon",
+        "url": "https://stumbleupon.com"
+    },
+    {
+        "id": "trello",
+        "name": "Trello",
+        "icon": "fa-trello",
+        "url": "https://trello.com"
+    },
+    {
+        "id": "tripadvisor",
+        "name": "Tripadvisor",
+        "icon": "fa-tripadvisor",
+        "url": "https://tripadvisor.com"
+    },
+    {
+        "id": "tumblr",
+        "name": "Tumblr",
+        "icon": "fa-tumblr",
+        "url": "https://tumblr.com"
+    },
+    {
+        "id": "twitch",
+        "name": "Twitch",
+        "icon": "fa-twitch",
+        "url": "https://twitch.tv"
+    },
+    {
+        "id": "twitter",
+        "name": "Twitter",
+        "icon": "fa-twitter",
+        "url": "https://twitter.com"
+    },
+    {
+        "id": "vimeo",
+        "name": "Vimeo",
+        "icon": "fa-vimeo",
+        "url": "https://vimeo.com"
+    },
+    {
+        "id": "vine",
+        "name": "Vine",
+        "icon": "fa-vine",
+        "url": "https://vine.co"
+    },
+    {
+        "id": "wikipedia",
+        "name": "Wikipedia",
+        "icon": "fa-wikipedia-w",
+        "url": "https://wikipedia.org"
+    },
+    {
+        "id": "wordpress",
+        "name": "Wordpress",
+        "icon": "fa-wordpress",
+        "url": "https://wordpress.com"
+    },
+    {
+        "id": "y-combinator",
+        "name": "YCombinator",
+        "icon": "fa-y-combinator",
+        "url": "https://ycombinator.com"
+    },
+    {
+        "id": "yahoo",
+        "name": "Yahoo",
+        "icon": "fa-yahoo",
+        "url": "https://yahoo.com"
+    },
+    {
+        "id": "yelp",
+        "name": "Yelp",
+        "icon": "fa-yelp",
+        "url": "https://yelp.com"
+    },
+    {
+        "id": "youtube",
+        "name": "Youtube",
+        "icon": "fa-youtube",
+        "url": "https://youtube.com"
+    },
+    {
+        "id": "clickup",
+        "name": "ClickUp",
+        "icon": "fa-sitemap",
+        "url": "https://app.clickup.com"
+    }
+]
