@@ -247,9 +247,10 @@
 
       <section id="bookmarks">
         <h2>Bookmarks</h2>
-        <p>Manage your categorized bookmarks.</p>
+        <p>Manage your categorized bookmarks. (Max 5 categories, 10 links per category)</p>
         <div class="bookmark-options">
-          <ul></ul>
+          <ul id="bookmarks-list"></ul>
+          <button type="button" id="add-category">Add Category</button>
         </div>
       </section>
 
@@ -301,14 +302,5 @@
 
   <script src="js/config.js"></script>
   <script src="js/options.js"></script>
-  <script>
-    // Simple script to handle active state in sidebar
-    document.querySelectorAll('.sidebar nav a').forEach(link => {
-      link.addEventListener('click', function() {
-        document.querySelectorAll('.sidebar nav a').forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-  </script>
 </body>
 </html>

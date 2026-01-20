@@ -44,19 +44,25 @@ function getImages(url, callback) {
 
 function setImage(image) {
   background.style.backgroundImage = 'url(' + image.url + ')';
-  credit.innerHTML = Sanitizer.escapeHTML(makeAttributionUrl(image.user));
+  setCredit(image.user);
 }
 
-function makeAttributionUrl(user) {
-  let url =
-    '<a href="' +
-    user.links.html +
-    PATH_UTM +
-    '">Photo by ' +
-    user.name +
-    '</a> / <a href="https://unsplash.com">Unsplash</a>';
+function setCredit(user) {
+  credit.textContent = ''; // Clear existing content
 
-  return url;
+  let aUser = document.createElement('a');
+  aUser.href = user.links.html + PATH_UTM;
+  aUser.textContent = 'Photo by ' + user.name;
+
+  let separator = document.createTextNode(' / ');
+
+  let aUnsplash = document.createElement('a');
+  aUnsplash.href = 'https://unsplash.com';
+  aUnsplash.textContent = 'Unsplash';
+
+  credit.appendChild(aUser);
+  credit.appendChild(separator);
+  credit.appendChild(aUnsplash);
 }
 
 loadImage();

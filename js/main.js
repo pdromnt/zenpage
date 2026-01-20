@@ -60,7 +60,7 @@
   function tick() {
     let t = moment().format("HH:mm:ss");
     let d = moment().format("dddd, MMMM Do YYYY");
-    timeDisplay.innerHTML = Sanitizer.escapeHTML(t);
-    dateDisplay.innerHTML = Sanitizer.escapeHTML(d);
+    timeDisplay.textContent = t;
+    dateDisplay.textContent = d;
   }
 })();

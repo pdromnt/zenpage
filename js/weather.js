@@ -42,7 +42,8 @@ let positionStackApiKey = config.positionStackApiKey;
   function updateWeather(data, units, location) {
     temperatureText.innerHTML = data.main.temp.toString().split('.')[0] + '&deg;';
     unitText.innerHTML = parseUnits(units);
-    conditionIcon.classList.add('icon-' + data.weather[0].icon); // Need to use OWM icons, from here: https://openweathermap.org/weather-conditions
+    conditionIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    conditionIcon.alt = data.weather[0].description;
     conditionText.innerHTML = data.weather[0].description;
     weatherLocationText.innerHTML = location;
   }
