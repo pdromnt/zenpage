@@ -1,6 +1,3 @@
-let openWmApiKey = config.openWmApiKey;
-let positionStackApiKey = config.positionStackApiKey;
-
 (function () {
   let weather = document.querySelector('.weather');
   let temperatureText = document.querySelector('.weather__temperature');
@@ -10,24 +7,32 @@ let positionStackApiKey = config.positionStackApiKey;
   let weatherLocationText = document.querySelector('.weather__location');
 
   chrome.storage.sync.get({
-    weather: {}
+    weather: {},
+    apiKeys: {}
   }, function (options) {
-    if (options.weather.show) {
+    let openWmApiKey = options.apiKeys.openWeather;
+    let positionStackApiKey = options.apiKeys.positionStack;
+
+    if (options.weather.show && openWmApiKey && positionStackApiKey) {
       // Get Lat & Long from saved location.
       fetch(`https://api.positionstack.com/v1/forward?access_key=${positionStackApiKey}&query=${options.weather.location}`)
         .then(response => response.json().then(data => ({ status: response.status, data })))
         .then((response) => {
-          fetchWeather(response.data.data[0].latitude, response.data.data[0].longitude, options.weather.units, options.weather.location);
+          if (response.data.data && response.data.data.length > 0) {
+            fetchWeather(response.data.data[0].latitude, response.data.data[0].longitude, options.weather.units, options.weather.location, openWmApiKey);
+          } else {
+            console.error('PositionStack: No location data found.');
+          }
         })
         .catch((error) => {
           console.error(error);
-          alert('Error getting location information.');
+          // alert('Error getting location information.'); // Suppress alert on new tab load
         });
     }
   });
 
-  function fetchWeather(latitude, longitude, units, location) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${units}&appid=${openWmApiKey}`)
+  function fetchWeather(latitude, longitude, units, location, apiKey) {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`)
       .then(response => response.json().then(data => ({ status: response.status, data })))
       .then((response) => {
         weather.classList.add('active');
@@ -35,7 +40,7 @@ let positionStackApiKey = config.positionStackApiKey;
       })
       .catch((error) => {
         console.error(error);
-        alert('Error getting weather information.');
+        // alert('Error getting weather information.');
       });
   }
 

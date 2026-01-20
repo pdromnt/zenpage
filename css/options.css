@@ -268,3 +268,31 @@ button.geolocate:hover {
   font-weight: bold;
   color: var(--primary-color);
 }
+
+/* Details/Summary */
+details summary {
+  cursor: pointer;
+  list-style: none;
+  outline: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary h2 {
+  display: inline-block;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+details summary:after {
+  content: "+";
+  font-size: 1.5rem;
+  float: right;
+  font-weight: bold;
+}
+
+details[open] summary:after {
+  content: "-";
+}

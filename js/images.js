@@ -12,24 +12,32 @@ let PARAM_COUNT = 'count=20';
 let url = PATH_BASE + PATH_RANDOM + '?' + PARAM_FEATURED + '&' + PARAM_ORIENTATION + '&' + PARAM_COUNT;
 
 function loadImage() {
-  if (images.length === 0) {
-    getImages(url, function (result) {
-      images = JSON.parse(result).map(function (image) {
-        return {
-          url: image.urls.full,
-          user: image.user
-        };
-      });
+  chrome.storage.sync.get({
+    apiKeys: {}
+  }, function (options) {
+    if (options.apiKeys.unsplash) {
+      if (images.length === 0) {
+        getImages(url, options.apiKeys.unsplash, function (result) {
+          images = JSON.parse(result).map(function (image) {
+            return {
+              url: image.urls.full,
+              user: image.user
+            };
+          });
 
-      setImage(images[0]);
-    });
-  } else {
-    let current = images.pop();
-    setImage(current);
-  }
+          if (images.length > 0) {
+            setImage(images[0]);
+          }
+        });
+      } else {
+        let current = images.pop();
+        setImage(current);
+      }
+    }
+  });
 }
 
-function getImages(url, callback) {
+function getImages(url, apiKey, callback) {
 
   let xhr = new XMLHttpRequest();
 
@@ -38,7 +46,7 @@ function getImages(url, callback) {
       callback(xhr.responseText);
   }
   xhr.open("GET", url, true); // true for asynchronous
-  xhr.setRequestHeader('Authorization', 'Client-ID ' + config.unsplashKey);
+  xhr.setRequestHeader('Authorization', 'Client-ID ' + apiKey);
   xhr.send(null);
 }
 

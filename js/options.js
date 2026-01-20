@@ -6,6 +6,10 @@ let weatherDisplayOption = document.querySelector('#display-weather');
 let bookmarksList = document.getElementById('bookmarks-list');
 let addCategoryBtn = document.getElementById('add-category');
 
+let unsplashKeyOption = document.querySelector('#unsplash-key');
+let positionStackKeyOption = document.querySelector('#positionstack-key');
+let openWeatherKeyOption = document.querySelector('#openweather-key');
+
 let locationFetchStatus = document.getElementById('location-status');
 
 const MAX_CATEGORIES = 5;
@@ -123,10 +127,25 @@ function saveWeatherOptions() {
   });
 }
 
+function saveApiKeys() {
+  let apiKeys = {
+    unsplash: unsplashKeyOption.value.trim(),
+    positionStack: positionStackKeyOption.value.trim(),
+    openWeather: openWeatherKeyOption.value.trim()
+  };
+
+  chrome.storage.sync.set({
+    apiKeys: apiKeys
+  }, function () {
+    notifySave();
+  });
+}
+
 function saveOptions() {
   saveBookmarks();
   saveQuickLinks();
   saveWeatherOptions();
+  saveApiKeys();
 }
 
 function notifySave() {
@@ -181,8 +200,6 @@ function createCategoryElement(name = '', links = []) {
     links.forEach(link => {
       linksUl.appendChild(createLinkElement(link.title, link.url));
     });
-  } else {
-    // Add one empty link by default? Maybe not.
   }
 
   let addLinkBtn = document.createElement('button');
@@ -252,12 +269,6 @@ function restoreBookmarks() {
       bookmarksList.appendChild(createCategoryElement(bookmark.category, bookmark.links));
     });
 
-    // If empty, maybe show nothing or one empty?
-    if (bookmarks.length === 0) {
-        // Optional: Start with one empty category
-        // bookmarksList.appendChild(createCategoryElement());
-    }
-
     checkLimits();
   });
 }
@@ -300,10 +311,27 @@ function restoreWeatherOptions() {
   });
 }
 
+function restoreApiKeys() {
+  chrome.storage.sync.get({
+    apiKeys: {}
+  }, function (options) {
+    if (options.apiKeys.unsplash) {
+      unsplashKeyOption.value = options.apiKeys.unsplash;
+    }
+    if (options.apiKeys.positionStack) {
+      positionStackKeyOption.value = options.apiKeys.positionStack;
+    }
+    if (options.apiKeys.openWeather) {
+      openWeatherKeyOption.value = options.apiKeys.openWeather;
+    }
+  });
+}
+
 function restoreOptions() {
   restoreQuickLinks();
   restoreBookmarks();
   restoreWeatherOptions();
+  restoreApiKeys();
 }
 
 function getCurrentLocation() {
@@ -311,7 +339,20 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function (position) {
       if (position) {
         locationFetchStatus.textContent = 'Fetching data, please wait...';
-        getFormattedLocation(position, setLocation);
+        // Prefer the value from the input if present, otherwise try storage
+        let key = positionStackKeyOption.value.trim();
+        if (key) {
+           getFormattedLocation(position, key, setLocation);
+        } else {
+          chrome.storage.sync.get({ apiKeys: {} }, function(result) {
+            if (result.apiKeys.positionStack) {
+               getFormattedLocation(position, result.apiKeys.positionStack, setLocation);
+            } else {
+               alert("Please enter a PositionStack API Key.");
+               locationFetchStatus.textContent = '';
+            }
+          });
+        }
       } else {
         alert('Error getting location. Please manually enter your location in the text box.');
       }
@@ -325,16 +366,15 @@ function getCurrentLocation() {
   saveWeatherOptions();
 }
 
-function getFormattedLocation(position, callback) {
-  let positionStackApiKey = config.positionStackApiKey;
+function getFormattedLocation(position, apiKey, callback) {
   let latitude = position.coords.latitude;
   let longitude = position.coords.longitude;
   let location = '';
 
-  fetch(`https://api.positionstack.com/v1/reverse?access_key=${positionStackApiKey}&query=${latitude},${longitude}`)
+  fetch(`https://api.positionstack.com/v1/reverse?access_key=${apiKey}&query=${latitude},${longitude}`)
     .then(response => response.json().then(data => ({ status: response.status, data })))
     .then((response) => {
-      if (!response.data.data.length) {
+      if (!response.data.data || !response.data.data.length) {
         alert('Failed to get formatted location information. Using latitude and longitude.');
         location = latitude.toString() + ', ' + longitude.toString();
       } else {
