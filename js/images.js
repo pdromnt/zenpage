@@ -22,7 +22,9 @@ function loadImage(force = false) {
         if (!force && cache.cachedImage && cache.cachedImage.dataUri && cache.imageTimestamp && (now - cache.imageTimestamp < 3600000)) {
           setImage(cache.cachedImage);
         } else {
-          getImages(url, options.apiKeys.unsplash, function (result) {
+          // Add cache-buster to prevent browser from serving stale API response
+          let uniqueUrl = url + '&t=' + Date.now();
+          getImages(uniqueUrl, options.apiKeys.unsplash, function (result) {
             let fetchedImages = JSON.parse(result).map(function (image) {
               return {
                 url: image.urls.full,
