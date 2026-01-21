@@ -11,6 +11,7 @@ Forked from the original [ZenPage](https://github.com/jack-doyle/zenpage) to fix
 * Manifest V3 support
 * Massively improved performance
 * Localization support
+* Exportable data
 
 ## Installing
 1. First click in Code > Download Zip > Extract zip  
