@@ -93,6 +93,47 @@ h2 {
   font-size: 2.5rem;
 }
 
+.more-btn {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  font-size: 2rem;
+}
+
+.more-btn:hover {
+  opacity: 1;
+}
+
+.more-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 4px;
+  padding: 6px 0;
+  min-width: 160px;
+  z-index: 20;
+}
+
+.more-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  color: #eee;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.more-dropdown a:hover {
+  background: #444;
+}
+
+.more-dropdown .lni {
+  font-size: 1.5rem;
+}
+
 a,
 a:visited,
 a:hover,
