@@ -45,7 +45,7 @@
   function checkApiKeys() {
     chrome.storage.sync.get({ apiKeys: {} }, function (result) {
       let keys = result.apiKeys;
-      if (!keys.unsplash || !keys.unsplashSecret || !keys.positionStack || !keys.openWeather) {
+      if (!keys.unsplash || !keys.unsplashSecret || !keys.openWeather) {
         document.querySelector('.missing-keys-hint').classList.add('show');
       }
     });

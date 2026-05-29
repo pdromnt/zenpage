@@ -13,9 +13,8 @@ i18n.init().then(() => {
       apiKeys: {}
     }, function (options) {
       let openWmApiKey = options.apiKeys.openWeather;
-      let positionStackApiKey = options.apiKeys.positionStack;
 
-      if (options.weather.show && openWmApiKey && positionStackApiKey) {
+      if (options.weather.show && openWmApiKey) {
         // Check cache first
         chrome.storage.local.get(['weatherCache'], function (cacheResult) {
           let cache = cacheResult.weatherCache;
@@ -25,13 +24,13 @@ i18n.init().then(() => {
             // Use cached coordinates
             fetchWeather(cache.lat, cache.lon, options.weather.units, requestedLocation, openWmApiKey);
           } else {
-            // Fetch from PositionStack
-            fetch(`https://api.positionstack.com/v1/forward?access_key=${positionStackApiKey}&query=${requestedLocation}`)
+            // Fetch coordinates from OpenWeatherMap Geocoding API
+            fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(requestedLocation)}&limit=1&appid=${openWmApiKey}`)
               .then(response => response.json().then(data => ({ status: response.status, data })))
               .then((response) => {
-                if (response.data.data && response.data.data.length > 0) {
-                  let lat = response.data.data[0].latitude;
-                  let lon = response.data.data[0].longitude;
+                if (response.data && response.data.length > 0) {
+                  let lat = response.data[0].lat;
+                  let lon = response.data[0].lon;
 
                   // Cache the result
                   chrome.storage.local.set({
@@ -44,12 +43,11 @@ i18n.init().then(() => {
 
                   fetchWeather(lat, lon, options.weather.units, requestedLocation, openWmApiKey);
                 } else {
-                  console.error('PositionStack: No location data found.');
+                  console.error('OWM Geocoding: No location data found for "' + requestedLocation + '".');
                 }
               })
               .catch((error) => {
                 console.error(error);
-                // alert('Error getting location information.'); // Suppress alert on new tab load
               });
           }
         });

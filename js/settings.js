@@ -64,7 +64,6 @@ let addCategoryBtn = document.getElementById('add-category');
 
 let unsplashKeyOption = document.querySelector('#unsplash-key');
 let unsplashSecretOption = document.querySelector('#unsplash-secret');
-let positionStackKeyOption = document.querySelector('#positionstack-key');
 let openWeatherKeyOption = document.querySelector('#openweather-key');
 
 let locationFetchStatus = document.getElementById('location-status');
@@ -188,7 +187,6 @@ function saveApiKeys() {
   let apiKeys = {
     unsplash: unsplashKeyOption.value.trim(),
     unsplashSecret: unsplashSecretOption.value.trim(),
-    positionStack: positionStackKeyOption.value.trim(),
     openWeather: openWeatherKeyOption.value.trim()
   };
 
@@ -392,9 +390,6 @@ function restoreApiKeys() {
     if (options.apiKeys.unsplashSecret) {
       unsplashSecretOption.value = options.apiKeys.unsplashSecret;
     }
-    if (options.apiKeys.positionStack) {
-      positionStackKeyOption.value = options.apiKeys.positionStack;
-    }
     if (options.apiKeys.openWeather) {
       openWeatherKeyOption.value = options.apiKeys.openWeather;
     }
@@ -420,20 +415,15 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(function (position) {
       if (position) {
         locationFetchStatus.textContent = i18n.t('weather_fetching');
-        // Prefer the value from the input if present, otherwise try storage
-        let key = positionStackKeyOption.value.trim();
-        if (key) {
-          getFormattedLocation(position, key, setLocation);
-        } else {
-          chrome.storage.sync.get({ apiKeys: {} }, function (result) {
-            if (result.apiKeys.positionStack) {
-              getFormattedLocation(position, result.apiKeys.positionStack, setLocation);
-            } else {
-              alert(i18n.t("api_err_positionstack"));
-              locationFetchStatus.textContent = '';
-            }
-          });
+        // Use OpenWeatherMap reverse geocoding instead of PositionStack
+        let key = openWeatherKeyOption.value.trim();
+        if (!key) {
+          // No API key — fall back to raw coordinates
+          let loc = position.coords.latitude.toFixed(4) + ', ' + position.coords.longitude.toFixed(4);
+          setLocation(loc);
+          return;
         }
+        getFormattedLocation(position, key, setLocation);
       } else {
         alert(i18n.t('weather_err_geo'));
       }
@@ -452,20 +442,21 @@ function getFormattedLocation(position, apiKey, callback) {
   let longitude = position.coords.longitude;
   let location = '';
 
-  fetch(`https://api.positionstack.com/v1/reverse?access_key=${apiKey}&query=${latitude},${longitude}`)
+  fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${apiKey}`)
     .then(response => response.json().then(data => ({ status: response.status, data })))
     .then((response) => {
-      if (!response.data.data || !response.data.data.length) {
-        alert(i18n.t('api_err_location_format'));
-        location = latitude.toString() + ', ' + longitude.toString();
+      if (response.data && response.data.length > 0) {
+        let place = response.data[0];
+        location = place.name;
+        if (place.state) location += ', ' + place.state;
+        if (place.country) location += ' (' + place.country + ')';
       } else {
-        location = response.data.data[0].county + ', ' + response.data.data[0].region;
+        location = latitude.toFixed(4) + ', ' + longitude.toFixed(4);
       }
     })
     .catch((error) => {
       console.error(error);
-      alert(i18n.t('api_err_location_fetch'));
-      location = latitude.toString() + ', ' + longitude.toString();
+      location = latitude.toFixed(4) + ', ' + longitude.toFixed(4);
     })
     .finally(() => {
       if (callback && typeof callback === "function") {
