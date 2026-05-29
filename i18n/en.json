@@ -67,5 +67,7 @@
   "import_all": "Import All Settings",
   "import_success": "Import successful! Settings updated.",
   "import_error": "Import failed. Please check the file format.",
-  "data_management_desc": "Export or import your settings and bookmarks. Note that you can only import content exported from the extension, not from somewhere else."
+  "data_management_desc": "Export or import your settings and bookmarks. Note that you can only import content exported from the extension, not from somewhere else.",
+  "settings_date_format": "Date Format",
+  "date_format_locale": "Browser Default"
 }

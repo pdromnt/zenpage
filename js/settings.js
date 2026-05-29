@@ -209,12 +209,18 @@ function saveLanguage() {
   });
 }
 
+function saveDateFormat() {
+  const dateFormatSelect = document.getElementById('date-format');
+  chrome.storage.sync.set({ dateFormat: dateFormatSelect.value });
+}
+
 function saveOptions() {
   saveBookmarks();
   saveQuickLinks();
   saveWeatherOptions();
   saveApiKeys();
   saveLanguage();
+  saveDateFormat();
 }
 
 function notifySave() {
@@ -402,12 +408,20 @@ function restoreLanguage() {
   });
 }
 
+function restoreDateFormat() {
+  chrome.storage.sync.get({ dateFormat: 'locale' }, function (items) {
+    const el = document.getElementById('date-format');
+    if (el) el.value = items.dateFormat || 'locale';
+  });
+}
+
 function restoreOptions() {
   restoreQuickLinks();
   restoreBookmarks();
   restoreWeatherOptions();
   restoreApiKeys();
   restoreLanguage();
+  restoreDateFormat();
 }
 
 function getCurrentLocation() {

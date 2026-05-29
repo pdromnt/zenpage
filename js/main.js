@@ -11,6 +11,8 @@
   let loadImageBtn = hintRight.querySelector('span:last-child');
   let closeBtn = document.querySelector('.hint.top.left span:last-child');
 
+  let dateFormat = 'locale'; // Default: locale-based
+
   document.addEventListener('click', function (e) {
     if (bookmarksBtn.contains(e.target) && !bookmarks.classList.contains('open')) {
       openBookmarks();
@@ -36,10 +38,6 @@
 
   hintRight.addEventListener('animationend', resetAnimation);
 
-  // Schedule ticks, then tick for the first time.
-  setInterval(tick, 1000);
-  tick();
-
   checkApiKeys();
 
   function checkApiKeys() {
@@ -51,20 +49,32 @@
     });
   }
 
-  // Initialize i18n
+  // Load date format preference, then init i18n and start
+  chrome.storage.sync.get({ dateFormat: 'locale' }, function (result) {
+    dateFormat = result.dateFormat;
+  });
+
+  // Initialize i18n first, then start clock
   i18n.init().then(() => {
-    tick(); // Run tick after i18n is ready
+    tick();
+    setInterval(tick, 1000);
+  });
+
+  // Listen for date format changes
+  chrome.storage.onChanged.addListener(function (changes, namespace) {
+    if (namespace === 'sync' && changes.dateFormat) {
+      dateFormat = changes.dateFormat.newValue;
+      tick();
+    }
   });
 
   function handleImageReload() {
     chrome.storage.sync.get({ imageReloads: [] }, function (result) {
       let reloads = result.imageReloads;
       let now = Date.now();
-      // Filter reloads from the last 5 minutes (300000 ms)
       reloads = reloads.filter(timestamp => now - timestamp < 300000);
 
       if (reloads.length >= 3) {
-        // Show wait tooltip
         let hintRight = document.querySelector('.hint.right');
         let originalText = hintRight.innerHTML;
         hintRight.innerHTML = `<span>${i18n.t('rate_limit_msg')}</span>`;
@@ -74,10 +84,8 @@
           hintRight.innerHTML = originalText;
         }, 3000);
       } else {
-        // Allow reload
         reloads.push(now);
         chrome.storage.sync.set({ imageReloads: reloads });
-
         document.querySelector('.hint.right').classList.add('animated', 'jello');
         loadImage(true);
       }
@@ -100,6 +108,19 @@
     this.classList.remove('animated', 'jello');
   }
 
+  function formatDate(now, format, lang) {
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+
+    if (format === 'DD/MM/YYYY') return `${d}/${m}/${y}`;
+    if (format === 'MM/DD/YYYY') return `${m}/${d}/${y}`;
+    if (format === 'YYYY-MM-DD') return `${y}-${m}-${d}`;
+
+    // locale — use Intl
+    return new Intl.DateTimeFormat(lang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(now);
+  }
+
   function tick() {
     let now = new Date();
     let hour = now.getHours();
@@ -113,13 +134,12 @@
       greeting = i18n.t("greeting_night");
     }
 
-    // Localized Time
+    // Time
     let timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     let t = new Intl.DateTimeFormat(i18n.currentLanguage, timeOptions).format(now);
 
-    // Localized Date (e.g., "Tuesday, January 20, 2026")
-    let dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    let d = new Intl.DateTimeFormat(i18n.currentLanguage, dateOptions).format(now);
+    // Date — respects dateFormat preference
+    let d = formatDate(now, dateFormat, i18n.currentLanguage);
 
     timeDisplay.textContent = t;
     dateDisplay.textContent = d;
