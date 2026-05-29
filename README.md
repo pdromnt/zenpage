@@ -17,7 +17,7 @@ Forked from the original [ZenPage](https://github.com/jack-doyle/zenpage) to fix
 1. First click in Code > Download Zip > Extract zip  
 2. Then in your browser go to Extensions > Enable Developer Mode > Load Unpacked > Select the directory where you extracted the zip  
 3. Go to the extension Options page (right-click the extension icon -> Options, or click "Options" on the new tab page).
-4. Enter your API keys for Unsplash, PositionStack, and OpenWeatherMap in the "API Keys" section.
+4. Enter your API keys for Unsplash and OpenWeatherMap in the "API Keys" section. (PositionStack is no longer required — geocoding now uses OpenWeatherMap's built-in API.)
 5. Done!
   
 ProTip: The OpenWeatherMap API Key takes a while to activate, usually up to an hour.  
