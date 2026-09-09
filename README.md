@@ -28,7 +28,6 @@ Same process as installing. Your API keys and settings are saved in the browser 
 
 ## Screenshots
 ![Home-one](/screenshots/valley.png?raw=true)
-![Home-two](/screenshots/strawberries.png?raw=true)
 ![Bookmarks](/screenshots/bmarks.png?raw=true)
 
 ## License
